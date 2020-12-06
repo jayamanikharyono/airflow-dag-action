@@ -1,0 +1,33 @@
+name: airflow-dag-validation
+author: jayamanikharyono
+desription: Run Airflow DAG Validation on Airflow Project
+branding:
+  icon: check
+  color: cyan
+
+inputs:
+  pythonVersion:
+    description: Version Python that run Airflow
+    required: false
+    default: ""
+  dagPaths:
+    description: DAG dir to validate
+    required: false
+    default: "dags"
+  requirementsFile:
+    description: path to requirements file that airflow use to run the DAG files.
+    required: false
+    default: "requirements.txt"
+
+outputs:
+  validator-result:
+    description: dag validator result
+    value: ${{ steps.run }}
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.pythonVersion }}
+    - ${{ inputs.requirementsFile }}
+    - ${{ inputs.dagPaths }}
