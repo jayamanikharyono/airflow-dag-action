@@ -2,7 +2,7 @@ FROM python:3.6
 
 ADD entrypoint.sh /entrypoint.sh
 
-RUN pip install apache-airflow
+RUN pip install apache-airflow==1.10.12
 RUN pip install google-cloud-storage
 RUN pip install httplib2
 RUN pip install google-auth-httplib2

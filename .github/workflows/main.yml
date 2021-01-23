@@ -1,0 +1,14 @@
+name: Main CI/CD Pipeline
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: 'validate DAGs'
+        uses: ./
+        with:
+          requirementsFile: tests/requirements.txt
+          dagPaths: tests/dags
+          varFile: tests/var.json

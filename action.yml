@@ -6,10 +6,6 @@ branding:
   color: cyan
 
 inputs:
-  pythonVersion:
-    description: Version Python that run Airflow
-    required: false
-    default: ""
   dagPaths:
     description: DAG dir to validate
     required: false
@@ -18,6 +14,10 @@ inputs:
     description: path to requirements file that airflow use to run the DAG files.
     required: false
     default: "requirements.txt"
+  varFile:
+    description: path to var.json file that will be used to set Variable on airflow
+    required: false
+    default: ""
 
 outputs:
   validator-result:
@@ -28,6 +28,6 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.pythonVersion }}
     - ${{ inputs.requirementsFile }}
     - ${{ inputs.dagPaths }}
+    - ${{ inputs.varFile }}
