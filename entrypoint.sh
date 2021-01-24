@@ -4,9 +4,6 @@ echo "Start Testing"
 echo "Req path : $1"
 echo "DAGs dir : $2"
 echo "Var path : $3"
-- ${{ inputs.requirementsFile }}
-- ${{ inputs.dagPaths }}
-- ${{ inputs.varFile }}
 
 export AIRFLOW_HOME="/github/workspace/$2"
 export PYTHONPATH="${PYTHONPATH}:${AIRFLOW_HOME}"
