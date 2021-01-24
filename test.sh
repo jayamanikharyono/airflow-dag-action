@@ -1,4 +1,3 @@
 #!/bin/sh
-var PATH = $1
-echo $PATH
-sed -i 's/{{dags}}/'"$PATH"'/' dag_validation.py
+#awk {sub("{{dags}}","$1")}1 dag_validation.py > temp.txt && mv temp.txt dag_validation.py
+perl -pe 's/{{dags}}/'$1'/' dag_validation.py > temp.txt && mv temp.txt dag_validation.py
