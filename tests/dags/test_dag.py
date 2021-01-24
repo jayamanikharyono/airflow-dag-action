@@ -1,9 +1,9 @@
-from datetime import timedelta
-from airflow.utils.dates import days_ago
-
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
 from airflow.models import Variable
+from airflow.utils.dates import days_ago
+from airflow.operators.python_operator import PythonOperator
+
+from datetime import timedelta
 
 import util
 
@@ -33,9 +33,10 @@ dag = DAG(
 )
 
 
-def test_template():
-    print('{{ egg_version }}')
-    return ("Test Templating!")
+def test_access_var():
+    my_var = Variable.get("MESSAGE")
+    print("my var message : {}".format(my_var))
+    return ("Access Var Success!")
 
 
 template_task = PythonOperator(

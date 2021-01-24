@@ -11,9 +11,6 @@ RUN pip install pandas-gbq
 RUN pip install jinja2-cli
 
 
-#ENV AIRFLOW_HOME=/github/workspace/airflow
-#ENV PYTHONPATH "${PYTHONPATH}:${AIRFLOW_HOME}"
-
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
