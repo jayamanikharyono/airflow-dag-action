@@ -1,27 +1,27 @@
-name: Airflow DAGs Validation
+name: 'Airflow DAGs Validation'
 author: jayamanikharyono
-desription: Validate DAGs, var and dependencies.
+desription: 'Validate DAGs, var and dependencies.'
 branding:
   icon: check
   color: gray-dark
 
 inputs:
   dagPaths:
-    description: DAG dir to validate
+    description: 'DAG dir to validate'
     required: false
     default: "dags"
   requirementsFile:
-    description: path to requirements file that airflow use to run the DAG files.
+    description: 'Path to requirements file that airflow use to run the DAG files.'
     required: false
     default: "requirements.txt"
   varFile:
-    description: path to var.json file that will be used to set Variable on airflow
+    description: 'Path to var.json file that will be used to set Variable on airflow'
     required: false
     default: ""
 
 outputs:
   validator-result:
-    description: dag validator result
+    description: 'DAGs validator result'
     value: ${{ steps.run }}
 
 runs:
