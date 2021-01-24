@@ -1,3 +1,4 @@
 #!/bin/sh
-
-sed -i 's/{{dags}}/ieg ufisfifbiu/' dag_validation.py
+var PATH = $1
+echo $PATH
+sed -i 's/{{dags}}/'"$PATH"'/' dag_validation.py
