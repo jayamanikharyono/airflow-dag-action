@@ -5,9 +5,7 @@ from airflow.operators.python_operator import PythonOperator
 
 from datetime import timedelta
 
-import util
-
-DAG_ID = util.get_dag_id(__file__)
+DAG_ID = "Test DAG"
 
 default_args = {
     'owner' : 'DE',
@@ -33,17 +31,29 @@ dag = DAG(
 )
 
 
+def test_import_module():
+    import prettyprint
+    return True
+
+
 def test_access_var():
     my_var = Variable.get("MESSAGE")
     print("my var message : {}".format(my_var))
     return ("Access Var Success!")
 
 
-template_task = PythonOperator(
-                    task_id = 'template_task',
-                    python_callable = test_template,
+access_var = PythonOperator(
+                    task_id = 'test_access_var',
+                    python_callable = test_access_var,
                     dag = dag
                 )
 
 
-template_task
+import_module = PythonOperator(
+                    task_id = 'test_import_module',
+                    python_callable = test_import_module,
+                    dag = dag
+                )
+
+
+access_var >> import_module
