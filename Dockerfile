@@ -8,6 +8,7 @@ RUN pip install httplib2
 RUN pip install google-auth-httplib2
 RUN pip install google-api-python-client
 RUN pip install pandas-gbq
+RUN pip install jinja2-cli
 
 
 #ENV AIRFLOW_HOME=/github/workspace/airflow
