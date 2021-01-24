@@ -1,4 +1,4 @@
-name: airflow-dag-validation
+name: Airflow DAGs Validation
 author: jayamanikharyono
 desription: Validate DAGs, var and dependencies.
 branding:
