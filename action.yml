@@ -1,6 +1,6 @@
 name: airflow-dag-validation
 author: jayamanikharyono
-desription: Run Airflow DAG Validation on Airflow Project
+desription: Validate DAGs file, var and dependencies.
 branding:
   icon: check
   color: cyan
