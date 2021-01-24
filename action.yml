@@ -1,9 +1,9 @@
 name: airflow-dag-validation
 author: jayamanikharyono
-desription: Validate DAGs file, var and dependencies.
+desription: Validate DAGs, var and dependencies.
 branding:
   icon: check
-  color: cyan
+  color: gray-dark
 
 inputs:
   dagPaths:
