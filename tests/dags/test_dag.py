@@ -37,7 +37,7 @@ def test_import_module():
 
 
 def test_access_var():
-    my_var = Variable.get("MESSAGE")
+    my_var = Variable.get("hsfjskdfjhk")
     print("my var message : {}".format(my_var))
     return ("Access Var Success!")
 
