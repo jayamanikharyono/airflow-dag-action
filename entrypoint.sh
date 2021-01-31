@@ -13,12 +13,12 @@ echo "Python : $PYTHONPATH"
 
 pip install -r $1
 
-jinja2 dag_validation.py -D dags=$2 > temp.txt && mv temp.txt dag_validation.py
+jinja2 ./dag_validation.py -D dags=./$2 > ./temp.txt && mv ./temp.txt ./dag_validation.py
 
-cat dag_validation.py
+cat ./dag_validation.py
 
 airflow initdb > /dev/null
 
 airflow variables --import $3
 
-pytest dag_validation.py
+pytest ./dag_validation.py
