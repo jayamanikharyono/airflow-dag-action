@@ -1,6 +1,6 @@
 name: 'Airflow DAGs Validation'
 author: jayamanikharyono
-description: 'Validate DAGs, var and dependencies.'
+description: 'Validate DAGs, variables and dependencies on your workflows.'
 branding:
   icon: check
   color: gray-dark
