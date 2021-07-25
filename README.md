@@ -20,6 +20,7 @@ Validate DAGs, Variables and Dependencies before deploying it to production by c
 ```
 
 ### Todo
+- Output Validation Result to PR comments
 - Add Airflow Plugins Validation
 - Upgrading to Airflow 2.0+
 
