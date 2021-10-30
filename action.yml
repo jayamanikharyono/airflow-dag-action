@@ -18,6 +18,9 @@ inputs:
     description: 'Path to var.json file that will be used to set Variable on airflow'
     required: false
     default: ""
+  accessToken:
+    description: 'Repo access token'
+    required: true
 
 outputs:
   validator-result:
@@ -31,3 +34,4 @@ runs:
     - ${{ inputs.requirementsFile }}
     - ${{ inputs.dagPaths }}
     - ${{ inputs.varFile }}
+    --${{ inputs.accessToken }}
