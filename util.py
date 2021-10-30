@@ -7,7 +7,7 @@ from github import Github
 
 def comment_pr(repo_token, filename):
     file = open(filename)
-    comment = file.read()
+    message = file.read()
     g = Github(repo_token)
     repo = g.get_repo(os.environ['GITHUB_REPOSITORY'])
     event_payload = open(os.environ['GITHUB_EVENT_PATH']).read()
