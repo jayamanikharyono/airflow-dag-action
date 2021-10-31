@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.9
 
 ADD entrypoint.sh /entrypoint.sh
 
@@ -10,7 +10,7 @@ RUN pip install httplib2
 RUN pip install google-auth-httplib2
 RUN pip install google-api-python-client
 RUN pip install pandas-gbq
-RUN pip install pytest==6.2.5
+RUN pip install pytest
 RUN pip install PyGithub==1.55
 
 
