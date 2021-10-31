@@ -15,7 +15,7 @@ logging.basicConfig(format='%(asctime)s %(message)s')
 class TestDagIntegrity(unittest.TestCase):
     LOAD_SECOND_THRESHOLD = 2
     def setUp(self):
-        DAGS_DIR = os.getenv('INPUT_DAGPATHS')
+        DAGS_DIR = "/github/workspace/" + os.getenv('INPUT_DAGPATHS')
         logger.info("DAGs dir : {}".format(DAGS_DIR))
         self.dagbag = DagBag(dag_folder = DAGS_DIR, include_examples = False)
         
