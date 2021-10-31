@@ -25,10 +25,11 @@ def comment_pr(repo_token, filename):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(allow_abbrev=False)
-    parser.add_argument('--filename', action = 'store', type = str, required = True)
+    parser.add_argument('--log_filename', action = 'store', type = str, required = True)
     parser.add_argument('--repo_token', action = 'store', type=str, required = True)
     args = parser.parse_args()
     try:
-        comment_pr(args.repo_token, args.filename)
+        comment_pr(args.repo_token, args.log_filename)
     except Exception as e:
+        print(e.args)
         logging.info("PR comment not supported on current event")
