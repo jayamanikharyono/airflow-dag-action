@@ -1,6 +1,6 @@
 # Airflow-Dag-Validation-Action
 
-Validate DAGs, Variables and Dependencies before deploying it to production by creating an isolated Airflow on Docker Container with supplied variables and dependencies
+Validate DAGs, Variables and Dependencies before deploying it to production by creating an isolated Airflow Environment on Docker Container with supplied variables and dependencies
 
 ![Main CI/CD Pipeline](https://github.com/jayamanikharyono/airflow-dag-action/workflows/Main%20CI/CD%20Pipeline/badge.svg)
 
@@ -15,7 +15,7 @@ Want to test airflow DAGs on folder tests/dags, requirements file in tests/requi
 Workflows `.github/workflows/main.yml`
 ```yml
 - name: 'Validate DAGs'
-  uses: jayamanikharyono/airflow-dag-action@v0.1
+  uses: jayamanikharyono/airflow-dag-action@v1.1
     with:
       requirementsFile: tests/requirements.txt
       dagPaths: tests/dags
