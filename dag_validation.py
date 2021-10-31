@@ -8,7 +8,7 @@ import unittest
 from airflow.models import DagBag
 
 logger = logging.getLogger()
-logger.setLevel(logging.ERROR)
+logger.setLevel(logging.INFO)
 logging.basicConfig(format='%(asctime)s %(message)s')
 
 
@@ -27,6 +27,7 @@ class TestDagIntegrity(unittest.TestCase):
                 self.dagbag.import_errors
             )
         )
+        print(self.dagbag.dagbag_report())
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDagIntegrity)
