@@ -11,10 +11,11 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logging.basicConfig(format='%(asctime)s %(message)s')
 
+
 class TestDagIntegrity(unittest.TestCase):
     LOAD_SECOND_THRESHOLD = 2
     def setUp(self):
-        DAGS_DIR = os.getenv('AIRFLOW_HOME')
+        DAGS_DIR = os.getenv('INPUT_DAGPATHS')
         logger.info("DAGs dir : {}".format(DAGS_DIR))
         self.dagbag = DagBag(dag_folder = DAGS_DIR, include_examples = False)
         
