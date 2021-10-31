@@ -6,6 +6,7 @@ from airflow.operators.python_operator import PythonOperator
 import numpy as np
 import pandas as pd
 from datetime import timedelta
+import tableauserverclient as TSC
 
 DAG_ID = "test_dag"
 
