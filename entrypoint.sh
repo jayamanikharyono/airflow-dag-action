@@ -1,12 +1,12 @@
 #!/bin/sh
 
 echo "Start Testing"
-echo "Req path : $1"
-echo "DAGs dir : $2"
-echo "Var path : $3"
+echo "Requirements path : $1"
+echo "DAGs directory : $2"
+echo "Variable path : $3"
 
-export AIRFLOW_HOME="/github/workspace/$2"
-#export AIRFLOW_HOME="/Users/jayaharyono/Documents/github/airflow-dag-action/tests/dags"
+#export AIRFLOW_HOME="/github/workspace/$2"
+export AIRFLOW_HOME=$2
 export PYTHONPATH="${PYTHONPATH}:${AIRFLOW_HOME}"
 
 echo "Airflow Home : $AIRFLOW_HOME"
