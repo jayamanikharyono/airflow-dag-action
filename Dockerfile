@@ -13,6 +13,7 @@ RUN pip install google-api-python-client
 RUN pip install pandas-gbq
 RUN pip install pytest
 RUN pip install PyGithub==1.55
+RUN pip install -U WTForms==2.3.3
 
 
 RUN chmod +x /entrypoint.sh
