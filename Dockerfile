@@ -1,8 +1,9 @@
 FROM python:3.9
 
 ADD entrypoint.sh /entrypoint.sh
+ADD . /
 
-RUN pip install SQLAlchemy==1.3.23 
+RUN pip install SQLAlchemy==1.3.23
 RUN pip install Flask-SQLAlchemy==2.4.4
 RUN pip install apache-airflow==1.10.12
 RUN pip install google-cloud-storage
