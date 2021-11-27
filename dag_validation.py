@@ -16,7 +16,6 @@ class TestDagIntegrity(unittest.TestCase):
         print("DAGs dir : {}".format(DAGS_DIR))
         self.dagbag = DagBag(dag_folder = DAGS_DIR, include_examples = False)
         #print(self.dagbag.dagbag_report())
-        sys.stdout.write(self.dagbag.dagbag_report())
 
     def test_import_dags(self):
         self.assertFalse(
@@ -25,7 +24,7 @@ class TestDagIntegrity(unittest.TestCase):
                 self.dagbag.import_errors
             )
         )
-
+        sys.stdout.write(self.dagbag.dagbag_report())
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDagIntegrity)
 unittest.TextTestRunner(verbosity=1).run(suite)
