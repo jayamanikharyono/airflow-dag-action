@@ -13,7 +13,7 @@ class TestDagIntegrity(unittest.TestCase):
     def setUp(self):
         DAGS_DIR = os.environ['INPUT_DAGPATHS']
         os.environ['PYTHONPATH'] = f"{os.getenv('PYTHONPATH')}:{DAGS_DIR}"
-        print("DAGs dir : {}".format(DAGS_DIR))
+        sys.stderr.write("DAGs dir : {}".format(DAGS_DIR))
         self.dagbag = DagBag(dag_folder = DAGS_DIR, include_examples = False)
         #print(self.dagbag.dagbag_report())
 
@@ -24,7 +24,7 @@ class TestDagIntegrity(unittest.TestCase):
                 self.dagbag.import_errors
             )
         )
-        sys.stdout.write(self.dagbag.dagbag_report())
+        sys.stderr.write(self.dagbag.dagbag_report())
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDagIntegrity)
 unittest.TextTestRunner(verbosity=1).run(suite)
