@@ -3,6 +3,7 @@
 """
 
 import os
+import logging
 import unittest
 from airflow.models import DagBag
 
@@ -12,9 +13,9 @@ class TestDagIntegrity(unittest.TestCase):
     def setUp(self):
         DAGS_DIR = os.environ['INPUT_DAGPATHS']
         os.environ['PYTHONPATH'] = f"{os.getenv('PYTHONPATH')}:{DAGS_DIR}"
-        print("DAGs dir : {}".format(DAGS_DIR))
+        logging.info("DAGs dir : {}".format(DAGS_DIR))
         self.dagbag = DagBag(dag_folder = DAGS_DIR, include_examples = False)
-        print(self.dagbag.dagbag_report())
+
 
     def test_import_dags(self):
         self.assertFalse(
@@ -24,6 +25,9 @@ class TestDagIntegrity(unittest.TestCase):
             )
         )
 
+    def tearDown(self):
+        logging.info(self.dagbag.dagbag_report())
+
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDagIntegrity)
-unittest.TextTestRunner(verbosity=2).run(suite)
+#unittest.TextTestRunner(verbosity=2).run(suite)
