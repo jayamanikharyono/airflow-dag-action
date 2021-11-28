@@ -30,4 +30,4 @@ class TestDagIntegrity(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDagIntegrity)
-unittest.TextTestRunner(verbosity=1).run(suite)
+#unittest.TextTestRunner(verbosity=2).run(suite)
