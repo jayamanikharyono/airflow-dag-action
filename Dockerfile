@@ -1,7 +1,7 @@
 FROM python:3.7
 
 ADD entrypoint.sh /entrypoint.sh
-ADD . /
+COPY . .
 
 RUN pip install SQLAlchemy==1.3.23
 RUN pip install Flask-SQLAlchemy==2.4.4
