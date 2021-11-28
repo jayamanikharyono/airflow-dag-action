@@ -1,6 +1,9 @@
 FROM python:3.7
 
-ADD entrypoint.sh /entrypoint.sh
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
 
 RUN pip install SQLAlchemy==1.3.23
 RUN pip install Flask-SQLAlchemy==2.4.4
@@ -14,8 +17,11 @@ RUN pip install pytest
 RUN pip install PyGithub==1.55
 RUN pip install -U WTForms==2.3.3
 
-COPY . .
 
-RUN chmod +x /entrypoint.sh
+# ADD entrypoint.sh /entrypoint.sh
+COPY . /app
+WORKDIR /app
 
-ENTRYPOINT ["/entrypoint.sh"]
+RUN chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]
