@@ -25,7 +25,7 @@ class TestDagIntegrity(unittest.TestCase):
             )
         )
 
-    def print_report(self):
+    def tearDown(self):
         logging.info(self.dagbag.dagbag_report())
 
 
