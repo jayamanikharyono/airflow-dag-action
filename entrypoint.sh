@@ -5,11 +5,11 @@ echo "Requirements path : $1"
 echo "DAGs directory : $2"
 echo "Variable path : $3"
 
-pip install -r $1
+pip3 install -r $1
 
 airflow initdb > /dev/null
 
 airflow variables --import $3
 
-pytest /ap/dag_validation.py -s -q >> result.log
-python /app/alert.py --log_filename=result.log --repo_token=$4
+pytest /app/dag_validation.py -s -q >> result.log
+python3 /app/alert.py --log_filename=result.log --repo_token=$4
