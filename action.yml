@@ -34,4 +34,4 @@ runs:
     - ${{ inputs.requirementsFile }}
     - ${{ inputs.dagPaths }}
     - ${{ inputs.varFile }}
-    --${{ inputs.accessToken }}
+    - ${{ inputs.accessToken }}

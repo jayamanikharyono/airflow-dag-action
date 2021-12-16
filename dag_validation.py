@@ -1,19 +1,22 @@
+"""
+@author: jayaharyonomanik
+"""
+
 import os
 import logging
 import unittest
 from airflow.models import DagBag
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-logging.basicConfig(format='%(asctime)s %(message)s')
 
 class TestDagIntegrity(unittest.TestCase):
     LOAD_SECOND_THRESHOLD = 2
+
     def setUp(self):
-        DAGS_DIR = os.getenv('AIRFLOW_HOME')
-        logger.info("DAGs dir : {}".format(DAGS_DIR))
+        DAGS_DIR = os.environ['INPUT_DAGPATHS']
+        os.environ['PYTHONPATH'] = f"{os.getenv('PYTHONPATH')}:{DAGS_DIR}"
+        logging.info("DAGs dir : {}".format(DAGS_DIR))
         self.dagbag = DagBag(dag_folder = DAGS_DIR, include_examples = False)
-        
+
     def test_import_dags(self):
         self.assertFalse(
             len(self.dagbag.import_errors),
@@ -22,6 +25,9 @@ class TestDagIntegrity(unittest.TestCase):
             )
         )
 
+    def tearDown(self):
+        logging.info(self.dagbag.dagbag_report())
+
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDagIntegrity)
-unittest.TextTestRunner(verbosity=2).run(suite)
+#unittest.TextTestRunner(verbosity=2).run(suite)
