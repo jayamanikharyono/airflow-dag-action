@@ -1,17 +1,21 @@
-FROM python:3.6
+FROM python:3.7
 
-ADD entrypoint.sh /entrypoint.sh
+ADD entrypoint.sh /action/entrypoint.sh
 
+RUN pip install SQLAlchemy==1.3.23
+RUN pip install Flask-SQLAlchemy==2.4.4
 RUN pip install apache-airflow==1.10.12
 RUN pip install google-cloud-storage
 RUN pip install httplib2
 RUN pip install google-auth-httplib2
 RUN pip install google-api-python-client
 RUN pip install pandas-gbq
-RUN pip install pytest==6.2.5
+RUN pip install pytest
 RUN pip install PyGithub==1.55
+RUN pip install -U WTForms==2.3.3
 
+COPY . /action/
 
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /action/entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/action/entrypoint.sh"]
