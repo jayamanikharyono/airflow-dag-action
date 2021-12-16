@@ -1,6 +1,6 @@
 FROM python:3.7
 
-ADD entrypoint.sh /entrypoint.sh
+ADD entrypoint.sh /action/entrypoint.sh
 
 RUN pip install SQLAlchemy==1.3.23
 RUN pip install Flask-SQLAlchemy==2.4.4
@@ -14,8 +14,8 @@ RUN pip install pytest
 RUN pip install PyGithub==1.55
 RUN pip install -U WTForms==2.3.3
 
-COPY . .
+COPY . /action/
 
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /action/entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/action/entrypoint.sh"]
