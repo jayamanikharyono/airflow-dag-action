@@ -11,5 +11,5 @@ airflow initdb > /dev/null
 
 airflow variables --import $3
 
-pytest dag_validation.py -s -q >> result.log
-python alert.py --log_filename=result.log --repo_token=$4
+pytest /action/dag_validation.py -s -q >> result.log
+python /action/alert.py --log_filename=result.log --repo_token=$4
