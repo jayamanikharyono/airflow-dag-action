@@ -4,7 +4,7 @@ echo "Requirements path : $1"
 echo "DAGs directory : $2"
 echo "Variable path : $3"
 
-CURR_DIR=$PWD/action
+CURR_DIR=$PWD
 
 pip install -r $CURR_DIR/$1
 
