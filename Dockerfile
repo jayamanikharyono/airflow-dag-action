@@ -1,21 +1,21 @@
 FROM python:3.7
 
-ADD entrypoint.sh /action/entrypoint.sh
+# Install airflow
+ENV PYTHON_VERSION 3.7
+ENV AIRFLOW_VERSION=2.2.4
+ENV CONSTRAINT_URL "https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt"
+RUN pip install "apache-airflow[async,postgres,google]==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
 
-RUN pip install SQLAlchemy==1.3.23
-RUN pip install Flask-SQLAlchemy==2.4.4
-RUN pip install apache-airflow==1.10.12
+# Install Deps
 RUN pip install google-cloud-storage
-RUN pip install httplib2
 RUN pip install google-auth-httplib2
 RUN pip install google-api-python-client
 RUN pip install pandas-gbq
 RUN pip install pytest
 RUN pip install PyGithub==1.55
-RUN pip install -U WTForms==2.3.3
 
-COPY . /action/
+WORKDIR /github/workspace
+COPY . /github/workspace/action
+RUN chmod +x /github/workspace/action/entrypoint.sh
 
-RUN chmod +x /action/entrypoint.sh
-
-ENTRYPOINT ["/action/entrypoint.sh"]
+ENTRYPOINT ["/github/workspace/action/entrypoint.sh"]
