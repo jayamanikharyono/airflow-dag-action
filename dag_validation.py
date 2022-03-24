@@ -12,7 +12,7 @@ class TestDagIntegrity(unittest.TestCase):
     LOAD_SECOND_THRESHOLD = 2
 
     def setUp(self):
-        DAGS_DIR = os.environ['INPUT_DAGPATHS']
+        DAGS_DIR = os.getenv('INPUT_DAGPATHS')
         os.environ['PYTHONPATH'] = f"{os.getenv('PYTHONPATH')}:{DAGS_DIR}"
         logging.info("DAGs dir : {}".format(DAGS_DIR))
         self.dagbag = DagBag(dag_folder = DAGS_DIR, include_examples = False)
@@ -30,4 +30,3 @@ class TestDagIntegrity(unittest.TestCase):
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestDagIntegrity)
-#unittest.TextTestRunner(verbosity=2).run(suite)
