@@ -1,5 +1,7 @@
 FROM python:3.7
 
+RUN python -m venv /opt/venv
+
 # Install airflow
 ENV PYTHON_VERSION 3.7
 ENV AIRFLOW_VERSION=2.2.4
@@ -16,6 +18,10 @@ RUN pip install PyGithub==1.55
 
 WORKDIR /github/workspace
 COPY . /github/workspace
+
+
+RUN ls
+RUN echo $PWD
 
 RUN chmod +x /github/workspace/entrypoint.sh
 
