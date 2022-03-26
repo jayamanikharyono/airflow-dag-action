@@ -19,10 +19,9 @@ RUN pip install PyGithub==1.55
 WORKDIR /github/workspace
 COPY . /github/workspace
 
-
 RUN ls
 RUN echo $PWD
 
-RUN sudo chmod +x /github/workspace/entrypoint.sh
+RUN chmod +x entrypoint.sh
 
 ENTRYPOINT ["/github/workspace/entrypoint.sh"]
