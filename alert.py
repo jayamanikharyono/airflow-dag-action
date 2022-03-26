@@ -6,7 +6,6 @@ Created on Mon Oct 25 16:49:07 2021
 
 import os
 import json
-import logging
 import argparse
 from github import Github
 
@@ -23,8 +22,8 @@ def comment_pr(repo_token, filename):
         pr = repo.get_pull(json_payload.get('number'))
         pr.create_issue_comment(message)
     else:
-        logging.info("PR comment not supported on current event")
-        logging.info(message)
+        print("PR comment not supported on current event")
+        print(message)
     return True
 
 
