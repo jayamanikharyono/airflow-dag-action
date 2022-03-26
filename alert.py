@@ -19,8 +19,13 @@ def comment_pr(repo_token, filename):
     event_payload = open(os.getenv('GITHUB_EVENT_PATH')).read()
     json_payload =  json.loads(event_payload)
     print("JSON PAYLOAD" + str(json_payload))
-    pr = repo.get_pull(json_payload.get('number'))
-    pr.create_issue_comment(message)
+    try:
+        pr = repo.get_pull(json_payload.get('number'))
+        pr.create_issue_comment(message)
+    except Exception as e:
+        logging.info(e.args)
+        logging.info("Not PR event")
+        logging.info(message)
     return True
 
 
