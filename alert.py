@@ -6,10 +6,10 @@ Created on Mon Oct 25 16:49:07 2021
 """
 
 import os
+import re
 import json
 import argparse
 from github import Github
-from unidecode import unidecode
 
 
 def comment_pr(repo_token, filename):
@@ -22,7 +22,8 @@ def comment_pr(repo_token, filename):
     json_payload =  json.loads(event_payload)
     if json_payload.get('number') is not None:
         pr = repo.get_pull(json_payload.get('number'))
-        pr.create_issue_comment("```" + unidecode(message).replace("�", "") + "```")
+        message = re.sub(r'[^\x00-\x7f]',r'', message)
+        pr.create_issue_comment("```" + message + "```")
     else:
         print("PR comment not supported on current event")
         print(message)
