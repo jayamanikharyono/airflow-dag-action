@@ -16,14 +16,9 @@ RUN pip install pandas-gbq
 RUN pip install pytest
 RUN pip install PyGithub==1.55
 
-#WORKDIR /github/workspace
-RUN mkdir /github
-RUN mkdir /github/workspace
+WORKDIR /github/workspace
 COPY . /github/workspace/
 
-RUN ls
-RUN echo $PWD
-
 RUN chmod +x /github/workspace/entrypoint.sh
-#ENTRYPOINT ["/github/workspace/entrypoint.sh"]
+
 ENTRYPOINT ["/github/workspace/entrypoint.sh"]
