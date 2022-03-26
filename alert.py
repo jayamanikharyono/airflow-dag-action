@@ -8,7 +8,6 @@ import os
 import json
 import logging
 import argparse
-import traceback
 from github import Github
 
 
@@ -20,8 +19,8 @@ def comment_pr(repo_token, filename):
     repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
     event_payload = open(os.getenv('GITHUB_EVENT_PATH')).read()
     json_payload =  json.loads(event_payload)
-    if json_payload('number') is not None:
-        pr = repo.get_pull(json_payload('number'))
+    if json_payload.get('number') is not None:
+        pr = repo.get_pull(json_payload.get('number'))
         pr.create_issue_comment(message)
     else:
         logging.info("PR comment not supported on current event")
