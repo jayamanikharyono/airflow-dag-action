@@ -22,7 +22,7 @@ def comment_pr(repo_token, filename):
     json_payload =  json.loads(event_payload)
     if json_payload.get('number') is not None:
         pr = repo.get_pull(json_payload.get('number'))
-        pr.create_issue_comment("```" + unidecode(message) + "```")
+        pr.create_issue_comment("```" + unidecode(message).replace("�", "") + "```")
     else:
         print("PR comment not supported on current event")
         print(message)
