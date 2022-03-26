@@ -1,6 +1,5 @@
 #!/bin/sh
-echo $PWD
-ls
+
 echo "Start Testing"
 echo "Requirements path : $1"
 echo "DAGs directory : $2"

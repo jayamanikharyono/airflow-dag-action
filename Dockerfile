@@ -24,4 +24,4 @@ RUN echo $PWD
 
 RUN chmod +x entrypoint.sh
 
-ENTRYPOINT ["/github/workspace/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
