@@ -16,9 +16,9 @@ def comment_pr(repo_token, filename):
     message = file.read()
     g = Github(repo_token)
     repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
-    event_payload = open(oos.getenv('GITHUB_EVENT_PATH')).read()
+    event_payload = open(os.getenv('GITHUB_EVENT_PATH')).read()
     json_payload =  json.loads(event_payload)
-    print(json_payload)
+    logging.info(json_payload)
     pr = repo.get_pull(json_payload['number'])
     pr.create_issue_comment(message)
     return True
