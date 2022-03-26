@@ -9,6 +9,7 @@ import os
 import json
 import argparse
 from github import Github
+from unidecode import unidecode
 
 
 def comment_pr(repo_token, filename):
@@ -21,7 +22,7 @@ def comment_pr(repo_token, filename):
     json_payload =  json.loads(event_payload)
     if json_payload.get('number') is not None:
         pr = repo.get_pull(json_payload.get('number'))
-        pr.create_issue_comment(message)
+        pr.create_issue_comment(unidecode(message))
     else:
         print("PR comment not supported on current event")
         print(message)
