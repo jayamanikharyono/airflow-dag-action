@@ -22,7 +22,7 @@ def comment_pr(repo_token, filename):
     json_payload =  json.loads(event_payload)
     if json_payload.get('number') is not None:
         pr = repo.get_pull(json_payload.get('number'))
-        message = re.sub(r'[^\x00-\x7f]',r'', message)
+        message = re.sub(r'[^\x00-\x7f-\xef\xbf\xbd]',r'', message)
         pr.create_issue_comment("```" + message + "```")
     else:
         print("PR comment not supported on current event")
