@@ -17,11 +17,8 @@ RUN pip install pytest
 RUN pip install PyGithub==1.55
 
 WORKDIR /github/workspace
-COPY . /github/workspace
+COPY . /github/workspace/
 
-RUN ls
-RUN echo $PWD
-
-RUN chmod +x entrypoint.sh
+RUN chmod +x /github/workspace/entrypoint.sh
 
 ENTRYPOINT ["/github/workspace/entrypoint.sh"]
