@@ -23,6 +23,6 @@ COPY . /github/workspace
 RUN ls
 RUN echo $PWD
 
-RUN chmod +x /github/workspace/entrypoint.sh
+RUN sudo chmod +x /github/workspace/entrypoint.sh
 
 ENTRYPOINT ["/github/workspace/entrypoint.sh"]
