@@ -6,7 +6,6 @@ Created on Mon Oct 25 16:49:07 2021
 """
 
 import os
-import re
 import json
 import argparse
 from github import Github
@@ -15,6 +14,7 @@ from github import Github
 def comment_pr(repo_token, filename):
     file = open(filename, encoding='utf-8')
     message = file.read()
+    message = message.encode().replace(b'\xef\xbf\xbd', b"").decode("utf-8")
 
     g = Github(repo_token)
     repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
@@ -22,7 +22,6 @@ def comment_pr(repo_token, filename):
     json_payload =  json.loads(event_payload)
     if json_payload.get('number') is not None:
         pr = repo.get_pull(json_payload.get('number'))
-        #message = re.sub(r'[^\x00-\x7f-\xef\xbf\xbd]',r'', message)
         pr.create_issue_comment("```" + message + "```")
     else:
         print("PR comment not supported on current event")
