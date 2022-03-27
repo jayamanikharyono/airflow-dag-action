@@ -14,7 +14,7 @@ from github import Github
 def comment_pr(repo_token, filename):
     file = open(filename, encoding='utf-8')
     message = file.read()
-    message = message.encode().replace(b'\xef\xbf\xbd', b"").decode("utf-8")
+    message = message.encode().replace(b'\xef\xbf\xbd', b" ").decode("utf-8")
 
     g = Github(repo_token)
     repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
