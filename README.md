@@ -16,11 +16,11 @@ Workflows `.github/workflows/main.yml`
 ```yml
 - name: 'Validate DAGs'
   uses: jayamanikharyono/airflow-dag-action@v2.0
-    with:
-      requirementsFile: tests/requirements.txt
-      dagPaths: tests/dags
-      varFile: tests/var.json
-      accessToken: ${{ secrets.GITHUB_TOKEN }}
+  with:
+    requirementsFile: tests/requirements.txt
+    dagPaths: tests/dags
+    varFile: tests/var.json
+    accessToken: ${{ secrets.GITHUB_TOKEN }}
 ```
 **Result**
 ![PR comment](images/comments_pr.png)
