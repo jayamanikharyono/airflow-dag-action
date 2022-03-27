@@ -10,7 +10,7 @@ pip install -r $1
 airflow db init
 airflow variables import $3
 
-cp -r action/* /github/workspace/
+cp -r /action/* /github/workspace/
 
 PWD
 ls

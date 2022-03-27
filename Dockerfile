@@ -16,7 +16,7 @@ RUN pip install pandas-gbq
 RUN pip install pytest
 RUN pip install PyGithub==1.55
 
-RUN mkdir action
+RUN mkdir /action
 COPY dag_validation.py /action/dag_validation_temp.py
 COPY alert.py action/alert_temp.py
 
