@@ -17,8 +17,8 @@ RUN pip install pytest
 RUN pip install PyGithub==1.55
 
 RUN mkdir /action
-COPY dag_validation.py /action/dag_validation_temp.py
-COPY alert.py action/alert_temp.py
+COPY dag_validation.py /action/dag_validation.py
+COPY alert.py action/alert.py
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
