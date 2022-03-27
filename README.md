@@ -15,7 +15,7 @@ Want to test airflow DAGs on folder tests/dags, requirements file in tests/requi
 Workflows `.github/workflows/main.yml`
 ```yml
 - name: 'Validate DAGs'
-  uses: jayamanikharyono/airflow-dag-action@v1.1
+  uses: jayamanikharyono/airflow-dag-action@v2.0
     with:
       requirementsFile: tests/requirements.txt
       dagPaths: tests/dags
@@ -26,8 +26,9 @@ Workflows `.github/workflows/main.yml`
 
 ### Todo
 - Output Validation Result to PR comments ✅
+- Upgrading to Airflow 2.0+ ✅
 - Add Airflow Plugins Validation
-- Upgrading to Airflow 2.0+
+
 
 #### Contributions
 Contributions are very welcome. You can follow this standard [contributions guidelines](https://github.com/firstcontributions/first-contributions) to contribute code.
