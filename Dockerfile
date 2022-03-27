@@ -16,10 +16,11 @@ RUN pip install pandas-gbq
 RUN pip install pytest
 RUN pip install PyGithub==1.55
 
-COPY entrypoint.sh entrypoint.sh
-COPY dag_validation.py dag_validation.py
-COPY alert.py alert.py
+RUN mkdir action
+COPY dag_validation.py /action/dag_validation_temp.py
+COPY alert.py action/alert_temp.py
 
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
