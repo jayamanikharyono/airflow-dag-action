@@ -12,8 +12,5 @@ airflow variables import $3
 
 cp -r /action/* /github/workspace/
 
-PWD
-ls
-
 pytest dag_validation.py -s -q >> result.log
 python alert.py --log_filename=result.log --repo_token=$4
