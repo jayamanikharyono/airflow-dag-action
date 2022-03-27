@@ -20,6 +20,7 @@ Workflows `.github/workflows/main.yml`
       requirementsFile: tests/requirements.txt
       dagPaths: tests/dags
       varFile: tests/var.json
+      accessToken: ${{ secrets.GITHUB_TOKEN }}
 ```
 **Result**
 ![PR comment](images/comments_pr.png)
