@@ -17,7 +17,6 @@ RUN pip install pytest
 RUN pip install PyGithub==1.55
 RUN pip install Unidecode
 
-#WORKDIR /github/workspace
 ADD entrypoint.sh /entrypoint.sh
 ADD dag_validation.py /dag_validation.py
 ADD alert.py /alert.py
