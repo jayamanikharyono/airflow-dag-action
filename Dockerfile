@@ -15,11 +15,10 @@ RUN pip install google-api-python-client
 RUN pip install pandas-gbq
 RUN pip install pytest
 RUN pip install PyGithub==1.55
-RUN pip install Unidecode
 
-ADD entrypoint.sh /entrypoint.sh
-ADD dag_validation.py /dag_validation.py
-ADD alert.py /alert.py
+COPY entrypoint.sh entrypoint.sh
+COPY dag_validation.py dag_validation.py
+COPY alert.py alert.py
 
 RUN chmod +x /entrypoint.sh
 
