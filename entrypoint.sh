@@ -13,6 +13,4 @@ airflow db init
 airflow variables import $CURR_DIR/$3
 
 pytest $CURR_DIR/dag_validation.py -s -q >> result.log
-python $CURR_DIR/alert.py --log_filename=result.log --repo_token=$CURR_DIR/$4
-
-exit 0
+python $CURR_DIR/alert.py --log_filename=result.log --repo_token=$4

@@ -15,6 +15,7 @@ RUN pip install google-api-python-client
 RUN pip install pandas-gbq
 RUN pip install pytest
 RUN pip install PyGithub==1.55
+RUN pip install Unidecode
 
 WORKDIR /github/workspace
 COPY . /github/workspace/
