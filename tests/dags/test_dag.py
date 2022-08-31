@@ -35,6 +35,7 @@ dag = DAG(
 
 def test_import_module():
     import prettyprint
+    from shared_var import image
     return True
 
 
