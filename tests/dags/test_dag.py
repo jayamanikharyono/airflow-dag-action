@@ -2,7 +2,11 @@ from airflow import DAG
 from airflow.models import Variable
 from airflow.utils.dates import days_ago
 from airflow.operators.python_operator import PythonOperator
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
+    KubernetesPodOperator,
+)
 
+from shared_var import image
 import numpy as np
 import pandas as pd
 from datetime import timedelta
@@ -58,5 +62,20 @@ import_module = PythonOperator(
                     dag = dag
                 )
 
+r_value = '{"foo": "bar"\n, "buzz": 2}'
 
-access_var >> import_module
+k8s_image = KubernetesPodOperator(
+                namespace="default",
+                image=image,
+                cmds=["bash", "-cx"],
+                arguments=["echo '{}' > /airflow/xcom/return.json".format(r_value)],
+                name="test-k8s-xcom-sidecar",
+                task_id="task-test",
+                labels={"dag": "test-xcom-sidecar"},
+                get_logs=True,
+                do_xcom_push=True,
+                is_delete_operator_pod=True,
+                log_events_on_failure=True,
+            )
+
+access_var >> import_module >> k8s_image
