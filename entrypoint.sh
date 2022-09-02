@@ -12,6 +12,8 @@ airflow variables import $3
 
 cp -r /action/* /github/workspace/
 
+export PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}${PWD}/$2"
+
 pytest dag_validation.py -s -q >> result.log
 pytest_exit_code=`echo Pytest exited $?`
 echo $pytest_exit_code
