@@ -27,6 +27,7 @@ def comment_pr(repo_token, filename):
             pr.create_issue_comment("```" + message + "```")
         else:
             print("PR comment not supported on current event")
+    # add this since github actions permission degraded when triggering from forked repo
     except GithubException as ge:
         print("Resource not accessible by integration")
         print(ge.args)
@@ -44,4 +45,4 @@ if __name__ == '__main__':
     parser.add_argument('--log_filename', action = 'store', type = str, required = True)
     parser.add_argument('--repo_token', action = 'store', type=str, required = True)
     args = parser.parse_args()
-    comment_pr("8jfjsfsfbesiefbi", args.log_filename)
+    comment_pr(args.repo_token, args.log_filename)
