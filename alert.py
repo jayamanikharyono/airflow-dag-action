@@ -17,23 +17,24 @@ def comment_pr(repo_token, filename):
     message = file.read()
     message = message.encode("ascii", "ignore").decode('utf-8')
 
-    g = Github(repo_token)
-    repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
-    event_payload = open(os.getenv('GITHUB_EVENT_PATH')).read()
-    json_payload =  json.loads(event_payload)
-    if json_payload.get('number') is not None:
-        try:
+    try:
+        g = Github(repo_token)
+        repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
+        event_payload = open(os.getenv('GITHUB_EVENT_PATH')).read()
+        json_payload =  json.loads(event_payload)
+        if json_payload.get('number') is not None:
             pr = repo.get_pull(json_payload.get('number'))
             pr.create_issue_comment("```" + message + "```")
-        except GithubException as ge:
-            print("Resource not accessible by integration")
-            print(ge.args)
-        except BadCredentialsException as bce:
-            print("Bad Credentials")
-            print(bce.args)
-    else:
-        print("PR comment not supported on current event")
-    print(message)
+        else:
+            print("PR comment not supported on current event")
+    except GithubException as ge:
+        print("Resource not accessible by integration")
+        print(ge.args)
+    except BadCredentialsException as bce:
+        print("Bad Credentials")
+        print(bce.args)
+    finally:
+        print(message)
     return True
     
 
