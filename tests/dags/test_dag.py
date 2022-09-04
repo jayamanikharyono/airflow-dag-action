@@ -21,7 +21,7 @@ default_args = {
     'email_on_failure' : False,
     'email_on_retry' : False,
     'retries' : 0,
-    'retry_delay' : timedelta(minutes=5)
+    'retry_delay' : timedelta(minutes=5),
 }
 
 
@@ -76,6 +76,7 @@ k8s_image = KubernetesPodOperator(
                 do_xcom_push=True,
                 is_delete_operator_pod=True,
                 log_events_on_failure=True,
+                dag=dag
             )
 
 access_var >> import_module >> k8s_image
