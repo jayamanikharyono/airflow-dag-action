@@ -27,11 +27,13 @@ def comment_pr(repo_token, filename):
             pr.create_issue_comment("```" + message + "```")
         except GithubException as ge:
             print("Resource not accessible by integration")
+            print(ge.args)
             print(message)
     else:
         print("PR comment not supported on current event")
         print(message)
     return True
+    
 
 
 if __name__ == '__main__':
@@ -39,4 +41,4 @@ if __name__ == '__main__':
     parser.add_argument('--log_filename', action = 'store', type = str, required = True)
     parser.add_argument('--repo_token', action = 'store', type=str, required = True)
     args = parser.parse_args()
-    comment_pr(args.repo_token, args.log_filename)
+    comment_pr("8jfjsfsfbesiefbi", args.log_filename)
