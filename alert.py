@@ -9,7 +9,7 @@ import os
 import json
 import argparse
 from github import Github
-from github.GithubException import GithubException
+from github.GithubException import GithubException, BadCredentialsException
 
 
 def comment_pr(repo_token, filename):
@@ -28,10 +28,12 @@ def comment_pr(repo_token, filename):
         except GithubException as ge:
             print("Resource not accessible by integration")
             print(ge.args)
-            print(message)
+        except BadCredentialsException as bce:
+            print("Bad Credentials")
+            print(bce.args)
     else:
         print("PR comment not supported on current event")
-        print(message)
+    print(message)
     return True
     
 
