@@ -9,6 +9,7 @@ import os
 import json
 import argparse
 from github import Github
+from github.GithubException import GithubException
 
 
 def comment_pr(repo_token, filename):
@@ -21,8 +22,12 @@ def comment_pr(repo_token, filename):
     event_payload = open(os.getenv('GITHUB_EVENT_PATH')).read()
     json_payload =  json.loads(event_payload)
     if json_payload.get('number') is not None:
-        pr = repo.get_pull(json_payload.get('number'))
-        pr.create_issue_comment("```" + message + "```")
+        try:
+            pr = repo.get_pull(json_payload.get('number'))
+            pr.create_issue_comment("```" + message + "```")
+        except GithubException as ge:
+            print("Resource not accessible by integration")
+            print(message)
     else:
         print("PR comment not supported on current event")
         print(message)
