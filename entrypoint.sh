@@ -15,7 +15,7 @@ airflow variables import $3
 cp -r /action/* /github/workspace/
 
 export PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}${PWD}/$2"
-export AIRFLOW__CORE__LOAD_EXAMPLES="False"
+export AIRFLOW__CORE__LOAD_EXAMPLES="$5"
 export AIRFLOW__CORE__PLUGINS_FOLDER="${PWD}/$4"
 
 pytest dag_validation.py -s -q >> result.log
