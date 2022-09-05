@@ -20,6 +20,8 @@ Workflows `.github/workflows/main.yml`
     requirementsFile: tests/requirements.txt
     dagPaths: tests/dags
     varFile: tests/var.json
+    pluginPaths: tests/plugins
+    loadExample: False
     accessToken: ${{ secrets.GITHUB_TOKEN }}
 ```
 **Result**
@@ -28,7 +30,7 @@ Workflows `.github/workflows/main.yml`
 ### Todo
 - Output Validation Result to PR comments ✅
 - Upgrading to Airflow 2.0+ ✅
-- Add Airflow Plugins Validation
+- Add Airflow Plugins Validation ✅
 
 
 #### Contributions

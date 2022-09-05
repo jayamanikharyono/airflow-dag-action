@@ -11,5 +11,7 @@ jobs:
         with:
           requirementsFile: tests/requirements.txt
           dagPaths: tests/dags
+          pluginPaths: tests/plugins
+          loadExamples: True
           varFile: tests/var.json
           accessToken: ${{ secrets.GITHUB_TOKEN }}
