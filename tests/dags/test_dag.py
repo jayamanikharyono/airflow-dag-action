@@ -1,6 +1,5 @@
 from airflow import DAG
 from airflow.models import Variable
-from airflow.utils.dates import days_ago
 from airflow.operators.python_operator import PythonOperator
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
     KubernetesPodOperator,
@@ -10,6 +9,9 @@ from shared_var import image
 import numpy as np
 import pandas as pd
 from datetime import timedelta
+
+from common.utils import days_ago # from plugins directory
+
 
 DAG_ID = "test_dag"
 
