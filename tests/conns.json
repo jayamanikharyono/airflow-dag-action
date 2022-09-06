@@ -1,0 +1,9 @@
+{
+    "test_conn": {
+        "conn_type": "ssh",
+        "host": "localhost",
+        "login": "USERNAME",
+        "password": "PASS",
+        "port": 25
+      }
+}

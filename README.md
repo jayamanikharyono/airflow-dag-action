@@ -20,6 +20,7 @@ Workflows `.github/workflows/main.yml`
     requirementsFile: tests/requirements.txt
     dagPaths: tests/dags
     varFile: tests/var.json
+    connFile: tests/conns.json
     pluginPaths: tests/plugins
     loadExample: False
     accessToken: ${{ secrets.GITHUB_TOKEN }}

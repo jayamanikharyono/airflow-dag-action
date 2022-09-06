@@ -1,6 +1,7 @@
 from airflow import DAG
 from airflow.models import Variable
-from airflow.operators.python_operator import PythonOperator
+from airflow.hooks.base import BaseHook
+from airflow.operators.python import PythonOperator
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
     KubernetesPodOperator,
 )
@@ -32,8 +33,8 @@ dag = DAG(
     description = 'sample dag to test dag',
     default_args = default_args,
     access_control = {
-        'DE' : {'can_dag_read', 'can_dag_edit'},
-        'BI' : {'can_dag_read'}
+        'DE' : {'can_read', 'can_edit'},
+        'BI' : {'can_read'}
     },
     schedule_interval = timedelta(days = 1)
 )
@@ -80,5 +81,6 @@ k8s_image = KubernetesPodOperator(
                 log_events_on_failure=True,
                 dag=dag
             )
+BaseHook.get_connection("test_conn")
 
 access_var >> import_module >> k8s_image
