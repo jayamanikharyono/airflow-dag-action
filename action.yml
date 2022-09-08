@@ -22,6 +22,10 @@ inputs:
     description: 'Path to var.json file that will be used to set Variable on airflow'
     required: false
     default: ""
+  connFile:
+    description: 'Path to conns.json file that will be used to set Connections on airflow'
+    required: false
+    default: ""
   loadExamples:
     description: 'Boolean flag for whether to load example dag or not'
     required: false
@@ -42,6 +46,7 @@ runs:
     - ${{ inputs.requirementsFile }}
     - ${{ inputs.dagPaths }}
     - ${{ inputs.varFile }}
+    - ${{ inputs.connFile }}
     - ${{ inputs.pluginPaths }}
     - ${{ inputs.loadExamples }}
     - ${{ inputs.accessToken }}
