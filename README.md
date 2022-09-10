@@ -6,7 +6,7 @@ Validate DAGs, Variables and Dependencies before deploying it to production by c
 
 ### Examples of usage scenarios
 
-Want to test airflow DAGs on folder tests/dags, requirements file in tests/requirements.txt and airflow variable file tests/var.json
+Want to test airflow DAGs on folder tests/dags with a given plugins in tests/plugins, requirements file in tests/requirements.txt, airflow variable file tests/var.json, and airflow connection on file in tests/conns.json
 
 - Provide your dependency files `requirements.txt` to test your python dependencies
 - Your `var.json` to test your variables
@@ -35,6 +35,8 @@ Workflows `.github/workflows/main.yml`
 - Output Validation Result to PR comments ✅
 - Upgrading to Airflow 2.0+ ✅
 - Add Airflow Plugins Validation ✅
+- Add Airflow Connections Validation ✅
+- Output Detailed Validation Result for Plugins and Connections 
 
 
 #### Contributions
