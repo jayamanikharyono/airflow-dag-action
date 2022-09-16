@@ -1,3 +1,6 @@
+from airflow.plugins_manager import AirflowPlugin
+import airflow.utils.python_virtualenv
+
 import datetime as dt
 from datetime import timedelta
 
@@ -13,3 +16,8 @@ def days_ago(n, hour=0, minute=0, second=0, microsecond=0, timezone="utc"):
         hour=hour, minute=minute, second=second, microsecond=microsecond
     )
     return today - timedelta(days=n)
+
+airflow.utils.python_virtualenv._generate_virtualenv_cmd=days_ago
+
+class VirtualPythonPlugin(AirflowPlugin):
+    name = 'days_ago_plugin'
