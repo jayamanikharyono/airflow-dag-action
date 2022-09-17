@@ -10,15 +10,23 @@ echo "Load examples : $6"
 
 pip install -r $1
 
+export AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS="False"
+
 airflow db init
+
 airflow variables import $3
 airflow connections import $4
+
 
 cp -r /action/* /github/workspace/
 
 export PYTHONPATH="${PYTHONPATH:+${PYTHONPATH}:}${PWD}/$2"
 export AIRFLOW__CORE__PLUGINS_FOLDER="${PWD}/$5"
 export AIRFLOW__CORE__LOAD_EXAMPLES="$6"
+
+airflow variables list >> result.log
+airflow connections list >> result.log
+airflow plugins >> result.log
 
 pytest dag_validation.py -s -q >> result.log
 pytest_exit_code=`echo Pytest exited $?`
