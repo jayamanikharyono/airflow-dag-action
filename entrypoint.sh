@@ -13,7 +13,6 @@ pip install -r $1
 export AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS="False"
 
 airflow db init
-
 airflow variables import $3
 airflow connections import $4
 
