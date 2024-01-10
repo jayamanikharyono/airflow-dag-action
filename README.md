@@ -19,7 +19,7 @@ Workflows `.github/workflows/main.yml`
 
 ```yml
 - name: 'Validate DAGs'
-  uses: lewisosborne/airflow-dag-action@v1.0.1
+  uses: jayamanikharyono/airflow-dag-action@v2.3
   with:
     requirementsFile: tests/requirements.txt
     dagPaths: tests/dags

@@ -1,4 +1,3 @@
-#the latest released Airflow image with default Python version (3.8 currently):
 FROM python:3.8
 
 RUN python -m venv /opt/venv
