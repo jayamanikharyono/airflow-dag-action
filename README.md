@@ -40,7 +40,7 @@ Workflows `.github/workflows/main.yml`
 - Add Airflow Plugins Validation ✅
 - Add Airflow Connections Validation ✅
 - Output Detailed Validation Result for Plugins and Connections
-- Possibility to have default Python version and Python version supplied by user/developer by Arguments/Env Variable
+- Possibility to have default and spesified Python Version by user/developer via Arguments/Env Variable
 
 #### Contributions
 
