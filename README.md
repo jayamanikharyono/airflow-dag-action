@@ -16,6 +16,7 @@ Want to test airflow DAGs on folder tests/dags with a given plugins in tests/plu
 - And boolean flag for whether to load example dags or not
 
 Workflows `.github/workflows/main.yml`
+
 ```yml
 - name: 'Validate DAGs'
   uses: jayamanikharyono/airflow-dag-action@v2.3
@@ -28,16 +29,18 @@ Workflows `.github/workflows/main.yml`
     loadExample: False
     accessToken: ${{ secrets.GITHUB_TOKEN }}
 ```
+
 **Result**
 ![PR comment](images/comments_pr.png)
 
 ### Todo
+
 - Output Validation Result to PR comments ✅
 - Upgrading to Airflow 2.0+ ✅
 - Add Airflow Plugins Validation ✅
 - Add Airflow Connections Validation ✅
-- Output Detailed Validation Result for Plugins and Connections 
-
+- Output Detailed Validation Result for Plugins and Connections
 
 #### Contributions
+
 Contributions are very welcome. You can follow this standard [contributions guidelines](https://github.com/firstcontributions/first-contributions) to contribute code.
