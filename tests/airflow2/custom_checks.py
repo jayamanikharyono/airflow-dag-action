@@ -1,0 +1,37 @@
+"""Custom validation tests for Airflow 2 DAGs."""
+
+import os
+from airflow.models import DagBag
+
+DAG_DIR = os.getenv("INPUT_DAGPATHS", "dags").split(",")[0].strip()
+
+
+def _load_dagbag():
+    return DagBag(dag_folder=DAG_DIR, include_examples=False)
+
+
+def test_dag_ids_are_snake_case():
+    dagbag = _load_dagbag()
+    for dag_id in dagbag.dags:
+        assert dag_id == dag_id.lower(), f"DAG '{dag_id}' must be lowercase"
+        assert " " not in dag_id, f"DAG '{dag_id}' must not contain spaces"
+
+
+def test_no_hardcoded_connection_strings():
+    forbidden = ["postgresql://", "mysql://", "mongodb://", "redis://"]
+    for root, _, files in os.walk(DAG_DIR):
+        for fname in files:
+            if not fname.endswith(".py") or fname.startswith("__"):
+                continue
+            with open(os.path.join(root, fname)) as f:
+                content = f.read()
+            for pattern in forbidden:
+                assert pattern not in content, (
+                    f"{fname} contains hardcoded connection string '{pattern}'"
+                )
+
+
+def test_all_dags_have_description():
+    dagbag = _load_dagbag()
+    for dag_id, dag in dagbag.dags.items():
+        assert dag.description, f"DAG '{dag_id}' is missing a description"

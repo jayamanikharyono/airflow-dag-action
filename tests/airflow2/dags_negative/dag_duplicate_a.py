@@ -5,7 +5,7 @@ from datetime import datetime
 with DAG(
     "shared_dag_id",
     start_date=datetime(2024, 1, 1),
-    schedule=None,
+    schedule_interval=None,
     default_args={"owner": "team-a"},
     description="First DAG using a shared ID — triggers duplicates error",
 ) as dag:

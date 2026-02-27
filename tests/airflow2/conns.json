@@ -5,5 +5,5 @@
         "login": "USERNAME",
         "password": "PASS",
         "port": 25
-      }
+    }
 }

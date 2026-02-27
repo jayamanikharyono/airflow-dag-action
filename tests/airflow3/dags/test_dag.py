@@ -12,8 +12,6 @@ from datetime import timedelta
 from common.utils import days_ago
 
 
-DAG_ID = "test_dag"
-
 default_args = {
     'owner': 'DE',
     'depends_on_past': False,
@@ -26,8 +24,8 @@ default_args = {
 }
 
 with DAG(
-    DAG_ID,
-    description='Airflow 3 test DAG with variables, connections, plugins and K8s operator',
+    "test_dag",
+    description='Airflow 3 DAG with variables, connections, plugins and K8s operator',
     default_args=default_args,
     schedule=timedelta(days=1),
 ) as dag:
@@ -39,35 +37,20 @@ with DAG(
 
     def test_access_var():
         my_var = Variable.get("hsfjskdfjhk")
-        print("my var message : {}".format(my_var))
         return "Access Var Success!"
 
     access_var = PythonOperator(
-        task_id='test_access_var',
-        python_callable=test_access_var,
+        task_id='test_access_var', python_callable=test_access_var,
     )
-
     import_module = PythonOperator(
-        task_id='test_import_module',
-        python_callable=test_import_module,
+        task_id='test_import_module', python_callable=test_import_module,
     )
-
-    r_value = '{"foo": "bar"\n, "buzz": 2}'
-
     k8s_image = KubernetesPodOperator(
-        namespace="default",
-        image=image,
-        cmds=["bash", "-cx"],
-        arguments=["echo '{}' > /airflow/xcom/return.json".format(r_value)],
-        name="test-k8s-xcom-sidecar",
-        task_id="task-test",
-        labels={"dag": "test-xcom-sidecar"},
-        get_logs=True,
-        do_xcom_push=True,
-        is_delete_operator_pod=True,
+        namespace="default", image=image, cmds=["bash", "-cx"],
+        arguments=["echo done"], name="test-k8s", task_id="task-test",
+        get_logs=True, do_xcom_push=True, on_finish_action="delete_pod",
         log_events_on_failure=True,
     )
 
     BaseHook.get_connection("test_conn")
-
     access_var >> import_module >> k8s_image

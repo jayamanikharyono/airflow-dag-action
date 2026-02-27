@@ -12,26 +12,26 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .pip-cache
-          key: pip-af2-${{ hashFiles('tests/requirements.txt') }}
+          key: pip-af2-${{ hashFiles('tests/airflow2/requirements.txt') }}
           restore-keys: pip-af2-
 
       - name: Validate DAGs
         id: validate
         uses: ./
         with:
-          requirementsFile: tests/requirements.txt
-          dagPaths: tests/dags_airflow2
-          pluginPaths: tests/plugins
+          requirementsFile: tests/airflow2/requirements.txt
+          dagPaths: tests/airflow2/dags
+          pluginPaths: tests/airflow2/plugins
           loadExamples: "True"
-          varFile: tests/var.json
-          connFile: tests/conns.json
+          varFile: tests/airflow2/var.json
+          connFile: tests/airflow2/conns.json
           accessToken: ${{ secrets.GITHUB_TOKEN }}
           airflowVersion: "2.10.4"
           pythonVersion: "3.11"
           airflowExtras: "async,postgres,cncf.kubernetes"
           additionalPips: "numpy pandas"
           validationRules: "all"
-          customTests: tests/custom_checks.py
+          customTests: tests/airflow2/custom_checks.py
           enableSarif: "true"
 
       - name: Upload SARIF
@@ -51,7 +51,7 @@ jobs:
       - name: Validate Negative DAGs
         uses: ./
         with:
-          dagPaths: tests/dags_negative
+          dagPaths: tests/airflow2/dags_negative
           accessToken: ${{ secrets.GITHUB_TOKEN }}
           airflowVersion: "2.10.4"
           pythonVersion: "3.11"

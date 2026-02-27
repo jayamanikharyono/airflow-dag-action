@@ -137,9 +137,9 @@ Airflow is now installed at runtime in `entrypoint.sh` using the configured vers
 **Implemented.** Infrastructure added:
 
 - **`Dockerfile.prebuilt`** — Parameterized Dockerfile that bakes Airflow into the image at build time via `ARG` (Python version, Airflow version, extras).
-- **`.github/workflows/build-images.yml`** — CI workflow that builds and pushes images to GHCR for a matrix of versions (Airflow 2.9.3/2.10.4 x Python 3.11/3.12). Triggers on changes to core files or manual dispatch.
+- **`.github/workflows/build-images.yml`** — CI workflow that builds and pushes images to GHCR for a matrix of versions (Airflow 2.10.4/3.1.7 x Python 3.11/3.12). Triggers on changes to core files or manual dispatch.
 
-**Image tags:** `ghcr.io/<repo>:py3.11-af2.10.4`, `ghcr.io/<repo>:py3.12-af2.9.3`, etc.
+**Image tags:** `ghcr.io/<repo>:py3.11-af2.10.4`, `ghcr.io/<repo>:py3.11-af3.1.7`, etc.
 
 **Usage in custom workflows:** Users can reference pre-built images directly in their own workflows using `docker run` for faster CI, bypassing the Dockerfile build step. The default action still builds from the local `Dockerfile` for zero-config usage.
 
@@ -246,7 +246,7 @@ These appear inline on PR diffs and in the Actions summary, making it immediatel
     restore-keys: pip-
 ```
 
-The CI workflow (`main.yml`) demonstrates this pattern.
+The CI workflows (`test-airflow2.yml`, `test-airflow3.yml`) demonstrate this pattern.
 
 ---
 
@@ -359,8 +359,9 @@ All 13 proposals have been implemented across Phase 1 and Phase 2. P11 and P13 w
 - `airflow db migrate` with fallback to `db init` for cross-version compatibility
 - CI workflow updated to demonstrate new inputs (`airflowVersion`, `airflowExtras`, `additionalPips`)
 
-**Files changed:** `action.yml`, `Dockerfile`, `entrypoint.sh`, `alert.py`, `.github/workflows/main.yml`
-**Files added:** `.dockerignore`, `Dockerfile.prebuilt`, `.github/workflows/build-images.yml`
+**Files changed:** `action.yml`, `Dockerfile`, `entrypoint.sh`, `alert.py`
+**Files added:** `.dockerignore`, `Dockerfile.prebuilt`, `.github/workflows/build-images.yml`, `.github/workflows/test-airflow2.yml`, `.github/workflows/test-airflow3.yml`
+**Files removed:** `.github/workflows/main.yml`
 
 ---
 
@@ -389,5 +390,5 @@ All 13 proposals have been implemented across Phase 1 and Phase 2. P11 and P13 w
 - Added SARIF upload step via `github/codeql-action/upload-sarif@v3`
 - Demonstrates new inputs: `validationRules`, `enableSarif`
 
-**Files changed:** `dag_validation.py`, `alert.py`, `entrypoint.sh`, `action.yml`, `Dockerfile`, `Dockerfile.prebuilt`, `.github/workflows/main.yml`, `.github/workflows/build-images.yml`
+**Files changed:** `dag_validation.py`, `alert.py`, `entrypoint.sh`, `action.yml`, `Dockerfile`, `Dockerfile.prebuilt`, `.github/workflows/build-images.yml`
 **Files added:** `sarif_output.py`
