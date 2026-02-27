@@ -12,6 +12,11 @@ from collections import deque
 WORKSPACE = os.getenv("GITHUB_WORKSPACE", "/github/workspace")
 ALL_RULES = ["import", "cycle", "duplicates", "task_count", "owner", "empty_dag"]
 
+IMPORT_ERROR_PATTERNS = {
+    "AirflowDagCycleException": "cycle",
+    "AirflowDagDuplicatedIdException": "duplicates",
+}
+
 
 def relativize_path(filepath):
     if filepath.startswith(WORKSPACE):
@@ -72,14 +77,21 @@ def validate_dags(dag_dirs, rules, max_task_count=None):
         dagbag = DagBag(dag_folder=dag_dir, include_examples=False)
         load_duration = time.time() - start_time
 
-        if "import" in rules:
-            for filepath, error in dagbag.import_errors.items():
-                results["errors"].append({
-                    "rule": "import",
-                    "file": relativize_path(filepath),
-                    "message": str(error).strip(),
-                })
-                results["status"] = "fail"
+        for filepath, error in dagbag.import_errors.items():
+            error_str = str(error).strip()
+            rule = "import"
+            for exception_name, mapped_rule in IMPORT_ERROR_PATTERNS.items():
+                if exception_name in error_str and mapped_rule in rules:
+                    rule = mapped_rule
+                    break
+            if rule == "import" and "import" not in rules:
+                continue
+            results["errors"].append({
+                "rule": rule,
+                "file": relativize_path(filepath),
+                "message": error_str,
+            })
+            results["status"] = "fail"
 
         for dag_id, dag in dagbag.dags.items():
             owner = ""

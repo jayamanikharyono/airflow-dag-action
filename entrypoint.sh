@@ -30,6 +30,9 @@ echo "Installing Apache Airflow ${INPUT_AIRFLOWVERSION} [${INPUT_AIRFLOWEXTRAS}]
 pip install \
     "apache-airflow[${INPUT_AIRFLOWEXTRAS}]==${INPUT_AIRFLOWVERSION}" \
     --constraint "${CONSTRAINT_URL}"
+# Re-run without constraints to ensure provider extras are fully resolved
+# (some pip/constraint combinations silently skip extras dependencies)
+pip install "apache-airflow[${INPUT_AIRFLOWEXTRAS}]==${INPUT_AIRFLOWVERSION}"
 
 if [ -n "${INPUT_ADDITIONALPIPS}" ]; then
     echo "Installing additional packages: ${INPUT_ADDITIONALPIPS}"
