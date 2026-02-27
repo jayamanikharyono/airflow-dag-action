@@ -5,7 +5,7 @@
 
 import os
 import json
-from github import Github
+from github import Github, Auth
 from github.GithubException import GithubException, BadCredentialsException
 
 
@@ -119,7 +119,10 @@ def comment_pr(message):
     repo_token = os.getenv("INPUT_ACCESSTOKEN", "")
 
     try:
-        g = Github(repo_token)
+        try:
+            g = Github(auth=Auth.Token(repo_token))
+        except (TypeError, AttributeError):
+            g = Github(repo_token)
         repo = g.get_repo(os.getenv("GITHUB_REPOSITORY"))
         event_path = os.getenv("GITHUB_EVENT_PATH")
         if not event_path:

@@ -6,8 +6,6 @@ default_args = {
     "owner": "data-engineering",
     "retries": 2,
     "retry_delay": timedelta(minutes=5),
-    "email": ["data-eng@example.com"],
-    "email_on_failure": True,
 }
 
 with DAG(

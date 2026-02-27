@@ -1,6 +1,6 @@
 from airflow import DAG
 from airflow.models import Variable
-from airflow.hooks.base import BaseHook
+from airflow.sdk.bases.hook import BaseHook
 from airflow.providers.standard.operators.python import PythonOperator
 from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
 
@@ -16,9 +16,6 @@ default_args = {
     'owner': 'DE',
     'depends_on_past': False,
     'start_date': days_ago(0),
-    'email': ['example@123.com'],
-    'email_on_failure': False,
-    'email_on_retry': False,
     'retries': 0,
     'retry_delay': timedelta(minutes=5),
 }
@@ -52,5 +49,11 @@ with DAG(
         log_events_on_failure=True,
     )
 
-    BaseHook.get_connection("test_conn")
-    access_var >> import_module >> k8s_image
+    def _check_connection():
+        BaseHook.get_connection("test_conn")
+        return True
+
+    check_conn = PythonOperator(
+        task_id='check_connection', python_callable=_check_connection,
+    )
+    access_var >> import_module >> check_conn >> k8s_image
