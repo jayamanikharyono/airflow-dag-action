@@ -17,8 +17,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        airflow_version: ['2.9.3', '2.10.4']
-        python_version: ['3.11', '3.12']
+        include:
+          - airflow_version: '2.10.4'
+            python_version: '3.11'
+            extras: 'async,postgres,google,cncf.kubernetes'
+          - airflow_version: '2.10.4'
+            python_version: '3.12'
+            extras: 'async,postgres,google,cncf.kubernetes'
+          - airflow_version: '3.1.7'
+            python_version: '3.11'
+            extras: 'cncf.kubernetes'
+          - airflow_version: '3.1.7'
+            python_version: '3.12'
+            extras: 'cncf.kubernetes'
     permissions:
       contents: read
       packages: write
@@ -45,7 +56,7 @@ jobs:
           build-args: |
             PYTHON_VERSION=${{ matrix.python_version }}
             AIRFLOW_VERSION=${{ matrix.airflow_version }}
-            AIRFLOW_EXTRAS=async,postgres,google,cncf.kubernetes
+            AIRFLOW_EXTRAS=${{ matrix.extras }}
           tags: ghcr.io/${{ github.repository }}:py${{ matrix.python_version }}-af${{ matrix.airflow_version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

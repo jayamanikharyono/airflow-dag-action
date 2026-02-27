@@ -102,10 +102,11 @@ def validate_dags(dag_dirs, rules, max_task_count=None):
 
             schedule = ""
             try:
-                if hasattr(dag, "schedule_interval"):
-                    schedule = str(dag.schedule_interval)
-                elif hasattr(dag, "timetable"):
-                    schedule = str(dag.timetable)
+                for attr in ("schedule", "schedule_interval", "timetable"):
+                    val = getattr(dag, attr, None)
+                    if val is not None:
+                        schedule = str(val)
+                        break
             except Exception:
                 pass
 

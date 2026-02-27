@@ -5,7 +5,7 @@ from datetime import datetime
 with DAG(
     "cycle_dag",
     start_date=datetime(2024, 1, 1),
-    schedule_interval=None,
+    schedule=None,
     default_args={"owner": "test"},
     description="DAG with circular task dependencies — triggers cycle error",
 ) as dag:

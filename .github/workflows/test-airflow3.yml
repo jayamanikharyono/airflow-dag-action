@@ -1,8 +1,8 @@
-name: Main CI/CD Pipeline
+name: Test with Airflow 3
 on: [push, pull_request]
 jobs:
   validate:
-    name: Validate DAGs (should pass)
+    name: Validate DAGs (Airflow 3)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -12,22 +12,23 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .pip-cache
-          key: pip-${{ hashFiles('tests/requirements.txt') }}
-          restore-keys: pip-
+          key: pip-af3-${{ hashFiles('tests/requirements.txt') }}
+          restore-keys: pip-af3-
 
-      - name: 'Validate DAGs'
+      - name: Validate DAGs
         id: validate
         uses: ./
         with:
           requirementsFile: tests/requirements.txt
-          dagPaths: tests/dags
+          dagPaths: tests/dags_airflow3
           pluginPaths: tests/plugins
           loadExamples: "True"
           varFile: tests/var.json
           connFile: tests/conns.json
           accessToken: ${{ secrets.GITHUB_TOKEN }}
-          airflowVersion: "2.10.4"
-          airflowExtras: "async,postgres,cncf.kubernetes"
+          airflowVersion: "3.1.7"
+          pythonVersion: "3.11"
+          airflowExtras: "cncf.kubernetes"
           additionalPips: "numpy pandas"
           validationRules: "all"
           customTests: tests/custom_checks.py
@@ -38,22 +39,22 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: validation_results.sarif
-          category: airflow-dag-validation
+          category: airflow3-dag-validation
 
   validate-negative:
-    name: Negative tests (expected errors/warnings)
+    name: Negative tests (Airflow 3)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 'Validate Negative Test DAGs'
+      - name: Validate Negative DAGs
         uses: ./
         with:
           dagPaths: tests/dags_negative
           accessToken: ${{ secrets.GITHUB_TOKEN }}
-          airflowVersion: "2.10.4"
-          airflowExtras: "async"
+          airflowVersion: "3.1.7"
+          pythonVersion: "3.11"
           validationRules: "all"
           maxTaskCount: "2"
           failOnError: "false"
