@@ -20,6 +20,7 @@ TEMPLATE_NAME = "comment.md.j2"
 def escape_table_cell(text, max_len=200):
     """Escape and truncate text for use in Markdown table cells."""
     text = str(text).replace("|", "\\|").replace("\n", " ").replace("\r", "")
+    text = text.replace("<", "&lt;").replace(">", "&gt;")  # Prevent HTML tag parsing
     return text[:max_len] + "..." if len(text) > max_len else text
 
 
