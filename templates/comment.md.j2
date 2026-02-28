@@ -2,7 +2,7 @@
 
 **Status:** {{ status_icon }} {{ status_text }}
 {% if context_label %}
-**Context:** `{{ context_label }}`
+**Context:** **{{ context_label }}**
 {% endif %}
 **DAGs:** {{ summary.total_dags }} | **Errors:** {{ summary.total_errors }} | **Warnings:** {{ summary.total_warnings }}{% if summary.min_load_duration_s is not none and summary.max_load_duration_s is not none %} | **Load:** {{ summary.min_load_duration_s }}s–{{ summary.max_load_duration_s }}s{% endif %}
 
