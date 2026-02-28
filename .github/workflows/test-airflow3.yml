@@ -1,0 +1,61 @@
+name: Test with Airflow 3
+on: [push, pull_request]
+jobs:
+  validate:
+    name: Validate DAGs (Airflow 3)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: .pip-cache
+          key: pip-af3-${{ hashFiles('tests/airflow3/requirements.txt') }}
+          restore-keys: pip-af3-
+
+      - name: Validate DAGs
+        id: validate
+        uses: ./
+        with:
+          requirementsFile: tests/airflow3/requirements.txt
+          dagPaths: tests/airflow3/dags
+          pluginPaths: tests/airflow3/plugins
+          loadExamples: "True"
+          varFile: tests/airflow3/var.json
+          connFile: tests/airflow3/conns.json
+          accessToken: ${{ secrets.GITHUB_TOKEN }}
+          airflowVersion: "3.1.7"
+          pythonVersion: "3.11"
+          airflowExtras: "cncf.kubernetes"
+          additionalPips: "numpy pandas"
+          validationRules: "all"
+          customTests: tests/airflow3/custom_checks.py
+          enableSarif: "true"
+
+      - name: Upload SARIF
+        if: always() && steps.validate.outputs.sarif-file != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: validation_results.sarif
+          category: airflow3-dag-validation
+
+  validate-negative:
+    name: Negative tests (Airflow 3)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Negative DAGs
+        uses: ./
+        with:
+          dagPaths: tests/airflow3/dags_negative
+          accessToken: ${{ secrets.GITHUB_TOKEN }}
+          airflowVersion: "3.1.7"
+          pythonVersion: "3.11"
+          airflowExtras: ""
+          validationRules: "all"
+          maxTaskCount: "2"
+          failOnError: "false"

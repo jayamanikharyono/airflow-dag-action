@@ -1,1 +1,0 @@
-image = "ubuntu:21.10"

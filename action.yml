@@ -7,46 +7,75 @@ branding:
 
 inputs:
   dagPaths:
-    description: 'DAG dir to validate'
+    description: 'DAG directories to validate (comma-separated for multiple, e.g. "dags/etl,dags/ml")'
     required: false
     default: "dags"
   pluginPaths:
-    description: 'Plugin dir to validate'
+    description: 'Plugin directory to validate'
     required: false
     default: "plugins"
   requirementsFile:
-    description: 'Path to requirements file that airflow use to run the DAG files.'
+    description: 'Path to requirements file for DAG dependencies'
     required: false
     default: "requirements.txt"
   varFile:
-    description: 'Path to var.json file that will be used to set Variable on airflow'
+    description: 'Path to JSON file with Airflow variables'
     required: false
     default: ""
   connFile:
-    description: 'Path to conns.json file that will be used to set Connections on airflow'
+    description: 'Path to JSON file with Airflow connections'
     required: false
     default: ""
   loadExamples:
-    description: 'Boolean flag for whether to load example dag or not'
+    description: 'Whether to load example DAGs'
     required: false
     default: "False"
   accessToken:
-    description: 'Repo access token'
+    description: 'GitHub token for PR comments'
     required: true
+  airflowVersion:
+    description: 'Apache Airflow version to validate against'
+    required: false
+    default: "2.10.4"
+  pythonVersion:
+    description: 'Python version for Airflow constraint resolution (must match the base Docker image)'
+    required: false
+    default: "3.11"
+  airflowExtras:
+    description: 'Comma-separated Airflow provider extras to install (e.g. "async,postgres,google,cncf.kubernetes")'
+    required: false
+    default: "async,postgres"
+  additionalPips:
+    description: 'Space-separated additional pip packages to install'
+    required: false
+    default: ""
+  validationRules:
+    description: 'Comma-separated validation rules or "all" (options: import,cycle,duplicates,task_count,owner,empty_dag)'
+    required: false
+    default: "all"
+  maxTaskCount:
+    description: 'Maximum number of tasks per DAG before warning (empty = no limit)'
+    required: false
+    default: ""
+  customTests:
+    description: 'Path to a custom pytest file to run alongside built-in validation'
+    required: false
+    default: ""
+  failOnError:
+    description: 'Whether to fail the action on validation errors (set to "false" for warning-only mode)'
+    required: false
+    default: "true"
+  enableSarif:
+    description: 'Generate SARIF output file for GitHub code scanning integration'
+    required: false
+    default: "false"
 
 outputs:
   validator-result:
-    description: 'DAGs validator result'
-    value: ${{ steps.run }}
+    description: 'Validation result (pass/fail)'
+  sarif-file:
+    description: 'Path to SARIF output file (only set when enableSarif is true)'
 
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.requirementsFile }}
-    - ${{ inputs.dagPaths }}
-    - ${{ inputs.varFile }}
-    - ${{ inputs.connFile }}
-    - ${{ inputs.pluginPaths }}
-    - ${{ inputs.loadExamples }}
-    - ${{ inputs.accessToken }}
