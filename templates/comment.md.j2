@@ -11,7 +11,7 @@
 | DAG ID | File | Tasks | Owner | Schedule |
 |--------|------|-------|-------|----------|
 {% for dag in dags -%}
-| `{{ dag.dag_id }}` | `{{ dag.file_name }}` | {{ dag.task_count }} | {{ dag.owner }} | `{{ dag.schedule }}` |
+| {{ dag.dag_id }} | {{ dag.file_name }} | {{ dag.task_count }} | {{ dag.owner or '—' }} | {{ dag.schedule }} |
 {% endfor %}
 
 {% endif %}
@@ -20,7 +20,7 @@
 | Rule | File | Message |
 |------|------|---------|
 {% for err in errors -%}
-| `{{ err.rule }}` | `{{ err.file_name }}` | {{ err.message }} |
+| {{ err.rule }} | {{ err.file_name }} | {{ err.message }} |
 {% endfor %}
 
 {% if long_errors %}
@@ -43,7 +43,7 @@
 | Rule | File | Message |
 |------|------|---------|
 {% for warn in warnings -%}
-| `{{ warn.rule }}` | `{{ warn.file_name }}` | {{ warn.message }} |
+| {{ warn.rule }} | {{ warn.file_name }} | {{ warn.message }} |
 {% endfor %}
 
 {% endif %}

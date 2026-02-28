@@ -4,6 +4,7 @@
 """
 
 import sys
+import json
 
 from util import RESULTS_FILE, load_json
 
