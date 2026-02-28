@@ -108,6 +108,8 @@ def validate_dags(dag_dirs, rules, max_task_count=None):
                     val = getattr(dag, attr, None)
                     if val is not None:
                         schedule = str(val)
+                        if "NullTimetable" in schedule:
+                            schedule = "None"
                         break
             except Exception:
                 pass
