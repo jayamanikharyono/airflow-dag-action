@@ -7,6 +7,17 @@ Supports **Airflow 2.x** and **Airflow 3.x**.
 ![Test with Airflow 2](https://github.com/jayamanikharyono/airflow-dag-action/workflows/Test%20with%20Airflow%202/badge.svg)
 ![Test with Airflow 3](https://github.com/jayamanikharyono/airflow-dag-action/workflows/Test%20with%20Airflow%203/badge.svg)
 
+## Examples of usage scenarios
+
+Want to test Airflow DAGs in `tests/dags` with plugins in `tests/plugins`, requirements in `tests/requirements.txt`, variables in `tests/var.json`, and connections in `tests/conns.json`?
+
+- Provide your **dependency files** (`requirements.txt`) to test your Python dependencies
+- Your **`var.json`** to test your variables
+- Your **`conns.json`** to test your connections
+- **Path to your DAGs directory** to import and validate DAGs with supplied dependencies and variables
+- **Path to your DAG plugins directory** to test DAGs using plugins
+- **Boolean flag** for whether to load example DAGs or not
+
 ## Usage
 
 ### Airflow 2
@@ -42,6 +53,13 @@ Supports **Airflow 2.x** and **Airflow 3.x**.
     validationRules: "all"
     enableSarif: "true"
 ```
+
+**Result**
+
+**Airflow 2 Sample Comments**
+![Airflow 2 PR comment](images/airflow2_comments_pr.png)
+**Airflow 3 Sample Comments**
+![Airflow 3 PR comment](images/airflow3_comments_pr.png)
 
 ## Inputs
 
@@ -111,6 +129,15 @@ Supports **Airflow 2.x** and **Airflow 3.x**.
     sarif_file: validation_results.sarif
     category: airflow-dag-validation
 ```
+
+## Todo
+
+- [x] Output Validation Result to PR comments
+- [x] Upgrading to Airflow 2.0+
+- [x] Add Airflow Plugins Validation
+- [x] Add Airflow Connections Validation
+- [ ] Output Detailed Validation Result for Plugins and Connections
+- [x] Possibility to have default and specified Python Version by user/developer via Arguments/Env Variable
 
 ## Contributions
 
