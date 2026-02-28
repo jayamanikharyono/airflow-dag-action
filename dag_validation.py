@@ -7,45 +7,45 @@ import os
 import sys
 import json
 import time
-from collections import deque
 
-WORKSPACE = os.getenv("GITHUB_WORKSPACE", "/github/workspace")
-ALL_RULES = ["import", "cycle", "duplicates", "task_count", "owner", "empty_dag"]
+from util import RESULTS_FILE, relativize_path
+
+ALL_RULES = [
+    "import",
+    "cycle",
+    "duplicates",
+    "task_count",
+    "owner",
+    "empty_dag",
+    "schedule",
+    "connection",
+    "config",
+]
 
 IMPORT_ERROR_PATTERNS = {
     "AirflowDagCycleException": "cycle",
     "AirflowDagDuplicatedIdException": "duplicates",
+    "ModuleNotFoundError": "import",
+    "AirflowNotFoundException": "connection",
+    "AirflowTimetableInvalid": "schedule",
+    "ValueError": "config",
 }
 
+# Use Airflow's built-in cycle detection when available (AF2); not available in AF3
+try:
+    from airflow.utils.dag_cycle_tester import check_cycle
+    from airflow.exceptions import AirflowDagCycleException
 
-def relativize_path(filepath):
-    if filepath.startswith(WORKSPACE):
-        return filepath[len(WORKSPACE):].lstrip("/")
-    return filepath
+    def has_cycle(dag):
+        try:
+            check_cycle(dag)
+            return False
+        except AirflowDagCycleException:
+            return True
+except ImportError:
+    has_cycle = None  # Cycle check not available (e.g. Airflow 3)
 
-
-def has_cycle(dag):
-    """Check for cycles using Kahn's topological sort algorithm."""
-    graph = {task.task_id: set() for task in dag.tasks}
-    in_degree = {task.task_id: 0 for task in dag.tasks}
-
-    for task in dag.tasks:
-        for downstream in task.downstream_list:
-            graph[task.task_id].add(downstream.task_id)
-            in_degree[downstream.task_id] += 1
-
-    queue = deque(tid for tid, d in in_degree.items() if d == 0)
-    visited = 0
-
-    while queue:
-        node = queue.popleft()
-        visited += 1
-        for neighbor in graph[node]:
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
-
-    return visited != len(graph)
+_CYCLE_UNAVAILABLE_WARNED = False
 
 
 def validate_dags(dag_dirs, rules, max_task_count=None):
@@ -62,6 +62,7 @@ def validate_dags(dag_dirs, rules, max_task_count=None):
     }
 
     all_dag_ids = {}
+    load_durations = []
 
     for dag_dir in dag_dirs:
         if not os.path.isdir(dag_dir):
@@ -76,6 +77,7 @@ def validate_dags(dag_dirs, rules, max_task_count=None):
         start_time = time.time()
         dagbag = DagBag(dag_folder=dag_dir, include_examples=False)
         load_duration = time.time() - start_time
+        load_durations.append(load_duration)
 
         for filepath, error in dagbag.import_errors.items():
             error_str = str(error).strip()
@@ -126,7 +128,12 @@ def validate_dags(dag_dirs, rules, max_task_count=None):
             all_dag_ids[dag_id].append(relativize_path(dag.fileloc))
 
             if "cycle" in rules and len(dag.tasks) > 0:
-                if has_cycle(dag):
+                if has_cycle is None:
+                    global _CYCLE_UNAVAILABLE_WARNED
+                    if not _CYCLE_UNAVAILABLE_WARNED:
+                        print("::warning::Cycle check not available (airflow.utils.dag_cycle_tester)")
+                        _CYCLE_UNAVAILABLE_WARNED = True
+                elif has_cycle(dag):
                     results["errors"].append({
                         "rule": "cycle",
                         "file": relativize_path(dag.fileloc),
@@ -175,6 +182,8 @@ def validate_dags(dag_dirs, rules, max_task_count=None):
         "total_errors": len(results["errors"]),
         "total_warnings": len(results["warnings"]),
         "dag_dirs_checked": len(dag_dirs),
+        "min_load_duration_s": round(min(load_durations), 2) if load_durations else None,
+        "max_load_duration_s": round(max(load_durations), 2) if load_durations else None,
     }
 
     return results
@@ -215,7 +224,7 @@ def main():
 
     results = validate_dags(dag_dirs, rules, max_task_count)
 
-    with open("validation_results.json", "w", encoding="utf-8") as f:
+    with open(RESULTS_FILE, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, default=str)
 
     emit_annotations(results)
@@ -227,6 +236,9 @@ def main():
     print(f"DAGs found    : {results['summary']['total_dags']}")
     print(f"Errors        : {results['summary']['total_errors']}")
     print(f"Warnings      : {results['summary']['total_warnings']}")
+    summary = results["summary"]
+    if summary.get("min_load_duration_s") is not None and summary.get("max_load_duration_s") is not None:
+        print(f"Load duration : {summary['min_load_duration_s']}s–{summary['max_load_duration_s']}s (min–max)")
     print(f"Rules applied : {', '.join(results['rules_applied'])}")
 
     if results["dags"]:

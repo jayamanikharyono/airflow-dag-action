@@ -1,4 +1,9 @@
-"""Custom validation tests for Airflow 3 DAGs."""
+# -*- coding: utf-8 -*-
+"""
+Custom validation tests for Airflow 3 DAGs.
+
+@author: jayaharyonomanik
+"""
 
 import os
 from airflow.models import DagBag

@@ -1,10 +1,14 @@
-from airflow.plugins_manager import AirflowPlugin
-import airflow.utils.python_virtualenv
+# -*- coding: utf-8 -*-
+"""
+@author: jayaharyonomanik
+"""
 
-import datetime as dt
-from datetime import timedelta
+import airflow.utils.python_virtualenv
+from airflow.plugins_manager import AirflowPlugin
 
 import pendulum
+import datetime as dt
+from datetime import timedelta
 
 
 def days_ago(n, hour=0, minute=0, second=0, microsecond=0, timezone="utc"):

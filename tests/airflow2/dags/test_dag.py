@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+@author: jayaharyonomanik
+"""
+
 from airflow import DAG
 from airflow.models import Variable
 from airflow.hooks.base import BaseHook
@@ -41,13 +46,19 @@ def test_access_var():
     my_var = Variable.get("hsfjskdfjhk")
     return "Access Var Success!"
 
+def _check_connection():
+    BaseHook.get_connection("test_conn")
+    return True
+
 
 access_var = PythonOperator(
     task_id='test_access_var', python_callable=test_access_var, dag=dag,
 )
+
 import_module = PythonOperator(
     task_id='test_import_module', python_callable=test_import_module, dag=dag,
 )
+
 k8s_image = KubernetesPodOperator(
     namespace="default", image=image, cmds=["bash", "-cx"],
     arguments=["echo done"], name="test-k8s", task_id="task-test",
@@ -55,12 +66,8 @@ k8s_image = KubernetesPodOperator(
     log_events_on_failure=True, dag=dag,
 )
 
-def _check_connection():
-    BaseHook.get_connection("test_conn")
-    return True
-
 check_conn = PythonOperator(
-    task_id='check_connection', python_callable=_check_connection,
+    task_id='check_connection', python_callable=_check_connection, dag=dag,
 )
 
 access_var >> import_module >> check_conn >> k8s_image

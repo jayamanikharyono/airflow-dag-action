@@ -1,5 +1,11 @@
+# -*- coding: utf-8 -*-
+"""
+@author: jayaharyonomanik
+"""
+
 from airflow import DAG
 from airflow.providers.standard.operators.empty import EmptyOperator
+
 from datetime import datetime, timedelta
 
 default_args = {
@@ -14,7 +20,7 @@ with DAG(
     start_date=datetime(2024, 1, 1),
     schedule="@daily",
     catchup=False,
-    description="Airflow 3 multi-stage ETL pipeline",
+    description="Airflow 3 multi-stage ETL pipeline"
 ) as dag:
     start = EmptyOperator(task_id="start")
     extract_users = EmptyOperator(task_id="extract_users")

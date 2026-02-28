@@ -1,5 +1,11 @@
+# -*- coding: utf-8 -*-
+"""
+@author: jayaharyonomanik
+"""
+
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator
+
 from datetime import datetime, timedelta
 
 default_args = {

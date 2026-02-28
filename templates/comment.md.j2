@@ -1,0 +1,70 @@
+## Airflow DAG Validation Results
+
+**Status:** {{ status_icon }} {{ status_text }}
+{% if context_label %}
+**Context:** `{{ context_label }}`
+{% endif %}
+**DAGs:** {{ summary.total_dags }} | **Errors:** {{ summary.total_errors }} | **Warnings:** {{ summary.total_warnings }}{% if summary.min_load_duration_s is not none and summary.max_load_duration_s is not none %} | **Load:** {{ summary.min_load_duration_s }}s–{{ summary.max_load_duration_s }}s{% endif %}
+
+{% if dags %}
+### DAGs
+| DAG ID | File | Tasks | Owner | Schedule |
+|--------|------|-------|-------|----------|
+{% for dag in dags %}
+| `{{ dag.dag_id }}` | `{{ dag.file_name }}` | {{ dag.task_count }} | {{ dag.owner }} | `{{ dag.schedule }}` |
+{% endfor %}
+
+{% endif %}
+{% if errors %}
+### Errors ({{ errors|length }})
+| Rule | File | Message |
+|------|------|---------|
+{% for err in errors %}
+| `{{ err.rule }}` | `{{ err.file_name }}` | {{ err.message }} |
+{% endfor %}
+
+{% if long_errors %}
+<details>
+<summary>Full Error Details</summary>
+
+{% for err in long_errors %}
+**[{{ err.rule }}]** `{{ err.file }}`
+```
+{{ err.message }}
+```
+
+{% endfor %}
+</details>
+
+{% endif %}
+{% endif %}
+{% if warnings %}
+### Warnings ({{ warnings|length }})
+| Rule | File | Message |
+|------|------|---------|
+{% for warn in warnings %}
+| `{{ warn.rule }}` | `{{ warn.file_name }}` | {{ warn.message }} |
+{% endfor %}
+
+{% endif %}
+{% if custom_results %}
+<details>
+<summary>Custom Test Results</summary>
+
+```
+{{ custom_results }}
+```
+</details>
+
+{% endif %}
+{% if env_info %}
+<details>
+<summary>Environment Details</summary>
+
+```
+{{ env_info }}
+```
+</details>
+
+{% endif %}
+<sub>Rules: {{ rules_applied }} | Dirs: {{ dag_dirs }}</sub>

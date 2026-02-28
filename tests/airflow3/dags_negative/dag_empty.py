@@ -1,4 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+@author: jayaharyonomanik
+"""
+
 from airflow import DAG
+
 from datetime import datetime
 
 dag = DAG(

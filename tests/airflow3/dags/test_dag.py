@@ -1,14 +1,20 @@
+# -*- coding: utf-8 -*-
+"""
+@author: jayaharyonomanik
+"""
+
 from airflow import DAG
 from airflow.models import Variable
 from airflow.sdk.bases.hook import BaseHook
 from airflow.providers.standard.operators.python import PythonOperator
 from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
 
-from shared_var import image
+
 import numpy as np
 import pandas as pd
 from datetime import timedelta
 
+from shared_var import image
 from common.utils import days_ago
 
 
@@ -36,12 +42,19 @@ with DAG(
         my_var = Variable.get("hsfjskdfjhk")
         return "Access Var Success!"
 
+    def _check_connection():
+        BaseHook.get_connection("test_conn")
+        return True
+
+
     access_var = PythonOperator(
         task_id='test_access_var', python_callable=test_access_var,
     )
+
     import_module = PythonOperator(
         task_id='test_import_module', python_callable=test_import_module,
     )
+
     k8s_image = KubernetesPodOperator(
         namespace="default", image=image, cmds=["bash", "-cx"],
         arguments=["echo done"], name="test-k8s", task_id="task-test",
@@ -49,11 +62,8 @@ with DAG(
         log_events_on_failure=True,
     )
 
-    def _check_connection():
-        BaseHook.get_connection("test_conn")
-        return True
-
     check_conn = PythonOperator(
-        task_id='check_connection', python_callable=_check_connection,
+        task_id='check_connection', python_callable=_check_connection
     )
+
     access_var >> import_module >> check_conn >> k8s_image

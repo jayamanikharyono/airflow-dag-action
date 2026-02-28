@@ -10,12 +10,14 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir \
         "apache-airflow[${AIRFLOW_EXTRAS}]==${AIRFLOW_VERSION}" \
         --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_VERSION}.txt" && \
-    pip install --no-cache-dir pytest PyGithub
+    pip install --no-cache-dir pytest PyGithub jinja2
 
 RUN mkdir /action
+COPY util.py /action/util.py
 COPY dag_validation.py /action/dag_validation.py
 COPY alert.py /action/alert.py
 COPY sarif_output.py /action/sarif_output.py
+COPY templates /action/templates
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

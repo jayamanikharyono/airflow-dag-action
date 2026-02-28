@@ -3,9 +3,9 @@
 @author: jayaharyonomanik
 """
 
-import os
 import sys
-import json
+
+from util import RESULTS_FILE, load_json
 
 SARIF_SCHEMA = (
     "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/"
@@ -79,15 +79,12 @@ def generate_sarif(results):
 
 
 def main():
-    results_file = "validation_results.json"
     sarif_file = "validation_results.sarif"
+    results = load_json(RESULTS_FILE)
 
-    if not os.path.isfile(results_file):
-        print(f"Results file not found: {results_file}")
+    if results is None:
+        print(f"Results file not found: {RESULTS_FILE}")
         sys.exit(1)
-
-    with open(results_file, encoding="utf-8") as f:
-        results = json.load(f)
 
     sarif = generate_sarif(results)
 

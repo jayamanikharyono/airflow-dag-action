@@ -6,9 +6,11 @@ on:
     branches: [master]
     paths:
       - 'Dockerfile.prebuilt'
+      - 'util.py'
       - 'dag_validation.py'
       - 'alert.py'
       - 'sarif_output.py'
+      - 'templates'
       - 'entrypoint.sh'
 
 jobs:
