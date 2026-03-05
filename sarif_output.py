@@ -3,6 +3,7 @@
 @author: jayaharyonomanik
 """
 
+import re
 import sys
 import json
 
@@ -21,7 +22,17 @@ RULE_DESCRIPTIONS = {
     "owner": "DAG has no meaningful owner configured",
     "empty_dag": "DAG has no tasks defined",
     "config": "Configuration error in the validation setup",
+    "schedule": "DAG has an invalid timetable or schedule configuration",
+    "connection": "DAG references a connection that was not found",
 }
+
+_LINE_RE = re.compile(r'[Ll]ine (\d+)')
+
+
+def _extract_line_number(message):
+    """Best-effort extraction of a line number from a traceback message."""
+    match = _LINE_RE.search(message)
+    return int(match.group(1)) if match else None
 
 
 def generate_sarif(results):
@@ -35,30 +46,42 @@ def generate_sarif(results):
     ]
 
     for item, level in all_items:
-        rule_id = f"dag-validation/{item['rule']}"
+        rule_id = f"dag-validation/{item.get('rule', 'unknown')}"
+        rule_key = item.get("rule", "unknown")
         if rule_id not in rules_seen:
             rules_seen[rule_id] = {
                 "id": rule_id,
                 "shortDescription": {
                     "text": RULE_DESCRIPTIONS.get(
-                        item["rule"], f"DAG validation: {item['rule']}"
+                        rule_key, f"DAG validation: {rule_key}"
                     )
                 },
                 "defaultConfiguration": {"level": level},
             }
 
+        filepath = item.get("file", "")
+        message = item.get("message", "")
+
+        location = {
+            "physicalLocation": {
+                "artifactLocation": {
+                    "uri": filepath,
+                    "uriBaseId": "%SRCROOT%",
+                }
+            }
+        }
+
+        line_num = _extract_line_number(message)
+        if line_num is not None:
+            location["physicalLocation"]["region"] = {
+                "startLine": line_num,
+            }
+
         sarif_results.append({
             "ruleId": rule_id,
             "level": level,
-            "message": {"text": item["message"]},
-            "locations": [{
-                "physicalLocation": {
-                    "artifactLocation": {
-                        "uri": item["file"],
-                        "uriBaseId": "%SRCROOT%",
-                    }
-                }
-            }],
+            "message": {"text": message},
+            "locations": [location],
         })
 
     return {
