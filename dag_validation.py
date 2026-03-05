@@ -191,24 +191,29 @@ def validate_dags(dag_dirs, rules, max_task_count=None):
     return results
 
 
+def _escape_annotation(text):
+    """Escape text for GitHub Actions workflow commands."""
+    return text.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
+
 def emit_annotations(results):
     """Emit GitHub Actions workflow commands for file-level annotations."""
     for error in results["errors"]:
         filepath = error.get("file", "")
-        message = error.get("message", "").replace("\n", "%0A").replace("\r", "")
+        message = _escape_annotation(error.get("message", ""))
         rule = error.get("rule", "")
         print(f"::error file={filepath},title=DAG Validation ({rule})::{message}")
 
     for warning in results["warnings"]:
         filepath = warning.get("file", "")
-        message = warning.get("message", "").replace("\n", "%0A").replace("\r", "")
+        message = _escape_annotation(warning.get("message", ""))
         rule = warning.get("rule", "")
         print(f"::warning file={filepath},title=DAG Validation ({rule})::{message}")
 
 
 def main():
     dag_paths = os.getenv("INPUT_DAGPATHS", "dags")
-    dag_dirs = [d.strip() for d in dag_paths.split(",")]
+    dag_dirs = [d.strip() for d in dag_paths.split(",") if d.strip()]
 
     rules_input = os.getenv("INPUT_VALIDATIONRULES", "all")
     if rules_input == "all":

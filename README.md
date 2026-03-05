@@ -6,6 +6,7 @@ Supports **Airflow 2.x** and **Airflow 3.x**.
 
 ![Test with Airflow 2](https://github.com/jayamanikharyono/airflow-dag-action/workflows/Test%20with%20Airflow%202/badge.svg)
 ![Test with Airflow 3](https://github.com/jayamanikharyono/airflow-dag-action/workflows/Test%20with%20Airflow%203/badge.svg)
+![Unit Tests](https://github.com/jayamanikharyono/airflow-dag-action/workflows/Unit%20Tests/badge.svg)
 
 ## Examples of usage scenarios
 
@@ -76,11 +77,12 @@ Want to test Airflow DAGs in `tests/dags` with plugins in `tests/plugins`, requi
 | `pythonVersion` | No | `"3.11"` | Python version for constraint resolution |
 | `airflowExtras` | No | `"async,postgres"` | Comma-separated Airflow extras |
 | `additionalPips` | No | `""` | Space-separated additional pip packages |
-| `validationRules` | No | `"all"` | Rules to run: `import,cycle,duplicates,task_count,owner,empty_dag` or `"all"` |
+| `validationRules` | No | `"all"` | Rules to run: `import,cycle,duplicates,task_count,owner,empty_dag,schedule,connection,config` or `"all"` |
 | `maxTaskCount` | No | `""` | Max tasks per DAG before warning (empty = no limit) |
 | `customTests` | No | `""` | Path to custom pytest validation file |
 | `failOnError` | No | `"true"` | Set to `"false"` for warning-only mode |
 | `enableSarif` | No | `"false"` | Generate SARIF output for code scanning |
+| `diffOnly` | No | `"true"` | Only validate DAG directories with changed files (set to `"false"` to always validate all) |
 
 ## Outputs
 
@@ -88,6 +90,7 @@ Want to test Airflow DAGs in `tests/dags` with plugins in `tests/plugins`, requi
 |--------|-------------|
 | `validator-result` | `pass` or `fail` |
 | `sarif-file` | Path to SARIF file (when `enableSarif` is `"true"`) |
+| `results-json` | Path to JSON results file for programmatic access |
 
 ## Validation Rules
 
@@ -99,19 +102,26 @@ Want to test Airflow DAGs in `tests/dags` with plugins in `tests/plugins`, requi
 | `task_count` | Warning | DAG exceeds `maxTaskCount` threshold |
 | `owner` | Warning | Missing or default owner |
 | `empty_dag` | Warning | DAG has zero tasks |
+| `schedule` | Error | Invalid timetable or schedule configuration |
+| `connection` | Error | DAG references a connection that was not found |
+| `config` | Error | Configuration error in the validation setup |
 
 ## Features
 
 - Structured Markdown PR comments with DAG tables, errors, and warnings
+- PR comment deduplication — each job updates its own comment instead of creating duplicates
 - File-level GitHub Actions annotations on PR diffs
-- SARIF output for GitHub Code Scanning integration
+- SARIF output for GitHub Code Scanning integration with line-level precision
+- Diff-aware validation — only validates directories with changed files (enabled by default)
 - Multiple DAG directory validation (comma-separated `dagPaths`)
 - Custom pytest validation scripts
 - Warning-only mode (`failOnError: "false"`)
 - Pip dependency caching support
 - Pre-built Docker images via GHCR
+- JSON results output for programmatic downstream use
 - Improved error classification — import errors are automatically categorized into sub-rules (`cycle`, `duplicates`, `connection`, `schedule`, `config`) based on exception patterns
 - Load duration tracking in validation summary
+- Constraint URL validation with clear error messages for invalid Airflow versions
 
 ## Structured PR Comments
 
@@ -175,23 +185,7 @@ Add the new `airflowVersion` input to pin your Airflow version explicitly. The d
 
 ## Todo
 
-- [x] Output Validation Result to PR comments
-- [x] Upgrading to Airflow 2.0+
-- [x] Add Airflow Plugins Validation
-- [x] Add Airflow Connections Validation
-- [x] Output Detailed Validation Result for Plugins and Connections
-- [x] Possibility to have default and specified Python Version by user/developer via Arguments/Env Variable
-- [x] Airflow 3.x support
-- [x] Configurable Airflow version and provider extras
-- [x] Modular validation rules engine (import, cycle, duplicates, task_count, owner, empty_dag)
-- [x] SARIF output for GitHub Code Scanning integration
-- [x] Structured PR comments with Jinja2 templates
-- [x] File-level GitHub Actions annotations on PR diffs
-- [x] Multiple DAG directory validation
-- [x] Custom pytest validation scripts
-- [x] Warning-only mode (`failOnError`)
-- [x] Pre-built Docker images via GHCR
-- [x] Pip dependency caching support
+- [ ] Build richer pre-built Docker images with broader provider coverage and popular data engineering packages
 
 ## Contributions
 
