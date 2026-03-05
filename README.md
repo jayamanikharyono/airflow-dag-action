@@ -8,6 +8,17 @@ Supports **Airflow 2.x** and **Airflow 3.x**.
 ![Test with Airflow 3](https://github.com/jayamanikharyono/airflow-dag-action/workflows/Test%20with%20Airflow%203/badge.svg)
 ![Unit Tests](https://github.com/jayamanikharyono/airflow-dag-action/workflows/Unit%20Tests/badge.svg)
 
+## Examples of usage scenarios
+
+Want to test Airflow DAGs in `tests/dags` with plugins in `tests/plugins`, requirements in `tests/requirements.txt`, variables in `tests/var.json`, and connections in `tests/conns.json`?
+
+- Provide your **dependency files** (`requirements.txt`) to test your Python dependencies
+- Your **`var.json`** to test your variables
+- Your **`conns.json`** to test your connections
+- **Path to your DAGs directory** to import and validate DAGs with supplied dependencies and variables
+- **Path to your DAG plugins directory** to test DAGs using plugins
+- **Boolean flag** for whether to load example DAGs or not
+
 ## Usage
 
 ### Airflow 2
