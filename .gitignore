@@ -131,6 +131,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# readme release notes
-RELEASE_v3.0.md
-RELEASE_v3.1.md
+# release notes and review docs
+RELEASE_*.md
+REVIEW.md
