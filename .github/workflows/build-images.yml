@@ -5,12 +5,14 @@ on:
   push:
     branches: [master]
     paths:
+      - 'Dockerfile'
       - 'Dockerfile.prebuilt'
+      - 'action.yml'
       - 'util.py'
       - 'dag_validation.py'
       - 'alert.py'
       - 'sarif_output.py'
-      - 'templates'
+      - 'templates/**'
       - 'entrypoint.sh'
 
 jobs:

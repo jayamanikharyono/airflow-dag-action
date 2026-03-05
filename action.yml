@@ -50,7 +50,7 @@ inputs:
     required: false
     default: ""
   validationRules:
-    description: 'Comma-separated validation rules or "all" (options: import,cycle,duplicates,task_count,owner,empty_dag)'
+    description: 'Comma-separated validation rules or "all" (options: import,cycle,duplicates,task_count,owner,empty_dag,schedule,connection,config)'
     required: false
     default: "all"
   maxTaskCount:
@@ -69,12 +69,18 @@ inputs:
     description: 'Generate SARIF output file for GitHub code scanning integration'
     required: false
     default: "false"
+  diffOnly:
+    description: 'Only validate DAG directories with changed files (set to "false" to always validate all directories)'
+    required: false
+    default: "true"
 
 outputs:
   validator-result:
     description: 'Validation result (pass/fail)'
   sarif-file:
     description: 'Path to SARIF output file (only set when enableSarif is true)'
+  results-json:
+    description: 'Path to JSON results file for programmatic access'
 
 runs:
   using: 'docker'

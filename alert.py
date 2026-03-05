@@ -15,12 +15,13 @@ from util import RESULTS_FILE, read_file, load_json
 ENV_INFO_FILE = "env_info.log"
 CUSTOM_RESULTS_FILE = "custom_results.log"
 TEMPLATE_NAME = "comment.md.j2"
+COMMENT_MARKER = "<!-- airflow-dag-validation:"
 
 
 def escape_table_cell(text, max_len=200):
     """Escape and truncate text for use in Markdown table cells."""
     text = str(text).replace("|", "\\|").replace("\n", " ").replace("\r", "")
-    text = text.replace("<", "&lt;").replace(">", "&gt;")  # Prevent HTML tag parsing
+    text = text.replace("<", "&lt;").replace(">", "&gt;")
     return text[:max_len] + "..." if len(text) > max_len else text
 
 
@@ -38,7 +39,7 @@ def _transform_dag(dag):
 def _transform_error(err):
     """Convert an error into template-ready dict."""
     return {
-        "rule": err["rule"],
+        "rule": err.get("rule", "unknown"),
         "file_name": os.path.basename(err.get("file", "")),
         "message": escape_table_cell(err.get("message", "")),
     }
@@ -47,7 +48,7 @@ def _transform_error(err):
 def _transform_warning(warn):
     """Convert a warning into template-ready dict."""
     return {
-        "rule": warn["rule"],
+        "rule": warn.get("rule", "unknown"),
         "file_name": os.path.basename(warn.get("file", "")),
         "message": escape_table_cell(warn.get("message", "")),
     }
@@ -104,10 +105,23 @@ def _create_github_client(token):
         return Github(token)
 
 
+def _build_marker(message):
+    """Extract the full marker line from the rendered message for dedup matching."""
+    for line in message.splitlines():
+        if line.startswith(COMMENT_MARKER):
+            return line.strip()
+    return None
+
+
 def comment_pr(message):
-    """Post the validation comment to the PR."""
+    """Post or update the validation comment on the PR."""
     token = os.getenv("INPUT_ACCESSTOKEN", "")
     event_path = os.getenv("GITHUB_EVENT_PATH")
+
+    if not token:
+        print("::warning::accessToken is empty, skipping PR comment.")
+        print(message)
+        return
 
     if not event_path:
         print("GITHUB_EVENT_PATH not set, skipping PR comment.")
@@ -122,14 +136,27 @@ def comment_pr(message):
             payload = json.load(f)
 
         pr_number = payload.get("number")
-        if pr_number is not None:
-            repo.get_pull(pr_number).create_issue_comment(message)
-        else:
+        if pr_number is None or pr_number == 0:
             print("PR comment not supported on current event")
+            print(message)
+            return
+
+        pr = repo.get_pull(pr_number)
+        marker = _build_marker(message)
+
+        if marker:
+            for comment in pr.get_issue_comments():
+                if comment.body and marker in comment.body:
+                    comment.edit(message)
+                    print("Updated existing PR comment.")
+                    return
+
+        pr.create_issue_comment(message)
+        print("Created new PR comment.")
     except BadCredentialsException:
-        print("Bad Credentials")
-    except GithubException:
-        print("Resource not accessible by integration")
+        print("::warning::Bad credentials — check that accessToken is valid.")
+    except GithubException as e:
+        print(f"::warning::GitHub API error: {e.data.get('message', str(e))}")
     finally:
         print(message)
 

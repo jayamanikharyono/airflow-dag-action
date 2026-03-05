@@ -29,6 +29,8 @@ def load_json(path):
 
 def relativize_path(filepath, workspace=None):
     """Return path relative to workspace root."""
+    if not filepath:
+        return ""
     base = workspace if workspace is not None else WORKSPACE
     if filepath.startswith(base):
         return filepath[len(base) :].lstrip("/")
