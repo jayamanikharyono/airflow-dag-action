@@ -100,71 +100,16 @@ fi
 
 # Diff-aware validation: filter dagPaths to only changed directories
 if [ "${INPUT_DIFFONLY}" = "true" ] && [ -n "${GITHUB_EVENT_PATH}" ]; then
-    CHANGED_FILES=""
-    PR_NUMBER=""
-    BASE_SHA=""
-
-    if [ -f "${GITHUB_EVENT_PATH}" ]; then
-        read -r PR_NUMBER BASE_SHA < <(python -c "
-import json
-with open('${GITHUB_EVENT_PATH}') as f:
-    e = json.load(f)
-pr = e.get('number', '') or e.get('pull_request', {}).get('number', '')
-base = e.get('pull_request', {}).get('base', {}).get('sha', '')
-if not base:
-    base = e.get('before', '')
-print(pr, base)
-" 2>/dev/null || echo "")
-    fi
-
-    # Strategy 1: For PRs, use GitHub API (works with shallow clones)
-    if [ -n "${PR_NUMBER}" ] && [ "${PR_NUMBER}" != "0" ] && [ -n "${INPUT_ACCESSTOKEN}" ]; then
-        echo "Diff-only mode: fetching changed files from PR #${PR_NUMBER} via API..."
-        CHANGED_FILES=$(curl -s \
-            -H "Authorization: token ${INPUT_ACCESSTOKEN}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files?per_page=300" | \
-            python -c "
-import json, sys
-try:
-    files = json.load(sys.stdin)
-    if isinstance(files, list):
-        for f in files:
-            print(f.get('filename', ''))
-except Exception:
-    pass
-" 2>/dev/null || true)
-    # Strategy 2: For pushes, use git diff (fetch base SHA if needed for shallow clones)
-    elif [ -n "${BASE_SHA}" ] && [ "${BASE_SHA}" != "0000000000000000000000000000000000000000" ]; then
-        if ! git cat-file -e "${BASE_SHA}" 2>/dev/null; then
-            echo "Diff-only mode: fetching base commit ${BASE_SHA:0:12}..."
-            git fetch --no-tags --depth=1 origin "${BASE_SHA}" 2>/dev/null || true
-        fi
-        CHANGED_FILES=$(git diff --name-only "${BASE_SHA}"..HEAD 2>/dev/null || true)
-    fi
-
-    if [ -n "${CHANGED_FILES}" ]; then
-        FILTERED_DIRS=""
-        IFS=',' read -ra _DIRS <<< "${INPUT_DAGPATHS}"
-        for dag_dir in "${_DIRS[@]}"; do
-            dag_dir=$(echo "${dag_dir}" | xargs)
-            [ -z "${dag_dir}" ] && continue
-            if echo "${CHANGED_FILES}" | grep -q "^${dag_dir}/"; then
-                FILTERED_DIRS="${FILTERED_DIRS:+${FILTERED_DIRS},}${dag_dir}"
-            fi
-        done
-        if [ -n "${FILTERED_DIRS}" ]; then
-            echo "Diff-only mode: validating changed directories: ${FILTERED_DIRS}"
-            export INPUT_DAGPATHS="${FILTERED_DIRS}"
-        else
-            echo "Diff-only mode: no DAG files changed, skipping validation."
-            if [ -n "${GITHUB_OUTPUT}" ]; then
-                echo "validator-result=pass" >> "${GITHUB_OUTPUT}"
-            fi
-            exit 0
-        fi
+    FILTERED=$(python diff_resolver.py 2>/dev/null || echo "${INPUT_DAGPATHS}")
+    if [ -z "${FILTERED}" ]; then
+        echo "Diff-only mode: no DAG files changed, skipping validation."
+        [ -n "${GITHUB_OUTPUT}" ] && echo "validator-result=pass" >> "${GITHUB_OUTPUT}"
+        exit 0
+    elif [ "${FILTERED}" != "${INPUT_DAGPATHS}" ]; then
+        echo "Diff-only mode: validating changed directories: ${FILTERED}"
+        export INPUT_DAGPATHS="${FILTERED}"
     else
-        echo "Diff-only mode: unable to determine changed files, falling back to full validation."
+        echo "Diff-only mode: validating all directories (could not narrow scope)."
     fi
 fi
 

@@ -12,6 +12,7 @@ on:
       - 'dag_validation.py'
       - 'alert.py'
       - 'sarif_output.py'
+      - 'diff_resolver.py'
       - 'templates/**'
       - 'entrypoint.sh'
 

@@ -185,30 +185,6 @@ Add the new `airflowVersion` input to pin your Airflow version explicitly. The d
 
 ## Todo
 
-- [x] Output Validation Result to PR comments
-- [x] Upgrading to Airflow 2.0+
-- [x] Add Airflow Plugins Validation
-- [x] Add Airflow Connections Validation
-- [x] Output Detailed Validation Result for Plugins and Connections
-- [x] Possibility to have default and specified Python Version by user/developer via Arguments/Env Variable
-- [x] Airflow 3.x support
-- [x] Configurable Airflow version and provider extras
-- [x] Modular validation rules engine (import, cycle, duplicates, task_count, owner, empty_dag, schedule, connection, config)
-- [x] SARIF output for GitHub Code Scanning integration
-- [x] Structured PR comments with Jinja2 templates
-- [x] File-level GitHub Actions annotations on PR diffs
-- [x] Multiple DAG directory validation
-- [x] Custom pytest validation scripts
-- [x] Warning-only mode (`failOnError`)
-- [x] Pre-built Docker images via GHCR
-- [x] Pip dependency caching support
-- [x] PR comment deduplication (find-and-update per job)
-- [x] SARIF line numbers from tracebacks
-- [x] Diff-aware validation (`diffOnly`)
-- [x] JSON results output (`results-json`)
-- [x] Unit test suite (47 tests)
-- [x] Constraint URL validation
-- [x] JSON validation for var/conn files
 - [ ] Build richer pre-built Docker images with broader provider coverage and popular data engineering packages
 
 ## Contributions
